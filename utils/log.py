@@ -1,7 +1,7 @@
 from constant import LOG
 
 
-def ActionError(action):
+def actionError(action):
     return action+LOG.ACTION_ERROR_STATEMENT
 
 
