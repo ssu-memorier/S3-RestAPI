@@ -1,5 +1,4 @@
-aws_keys.json
-test.pdf
+assets/
 __pycache__/
 test.py
-
+db.sqlite3
