@@ -1,4 +1,4 @@
-from constant import LOG
+from constants import LOG
 
 
 def actionError(action):

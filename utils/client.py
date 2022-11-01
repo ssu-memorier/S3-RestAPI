@@ -1,7 +1,7 @@
 import json
 import boto3
 
-from constant import KEY
+from constants import KEY
 
 
 def getClientBucket():
