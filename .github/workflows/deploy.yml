@@ -6,32 +6,32 @@ name: Production Deploy CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-			- name: create-aws-json
+      - name: create-aws-json
         id: create-json-1 # First ID
         uses: jsdaniell/create-json@v1.2.1
         with:
           name: "aws_keys.json"
           json: ${{ secrets.AWS_KEYS }}
-          dir: 'assets/'
-      - name : CloudFoundry push application with different directory
+          dir: "assets/"
+      - name: CloudFoundry push application with different directory
         uses: jhunt/cf-push@main
         with:
-          appdir:   '.'       # use the appdir option to select a specif folder where the cf app is stored
-          api:      ${{ secrets.PAAS_TA_URL }}
-          org:      ${{ secrets.PAAS_TA_ORG }}
-          space:    ${{ secrets.PAAS_TA_SPACE }}
+          appdir: "." # use the appdir option to select a specif folder where the cf app is stored
+          api: ${{ secrets.PAAS_TA_URL }}
+          org: ${{ secrets.PAAS_TA_ORG }}
+          space: ${{ secrets.PAAS_TA_SPACE }}
           username: ${{ secrets.PAAS_TA_USER }}
           password: ${{ secrets.PAAS_TA_PASSWORD }}
           manifest: manifest.yml
-          validate: true    
+          validate: true
