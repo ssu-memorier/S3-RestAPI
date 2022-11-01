@@ -22,7 +22,7 @@ jobs:
 			  uses: jsdaniell/create-json@v1.2.1
 			  with:
           name: "aws_keys.json"
-          json: ${{ secrets.AWS_KEYS}}
+          json: ${{ secrets.AWS_KEYS }}
           dir: 'assets/'
       - name : CloudFoundry push application with different directory
         uses: jhunt/cf-push@main
