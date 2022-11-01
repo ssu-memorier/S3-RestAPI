@@ -18,9 +18,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 			- name: create-aws-json
-			  id: create-json-1 # First ID
-			  uses: jsdaniell/create-json@v1.2.1
-			  with:
+        id: create-json-1 # First ID
+        uses: jsdaniell/create-json@v1.2.1
+        with:
           name: "aws_keys.json"
           json: ${{ secrets.AWS_KEYS }}
           dir: 'assets/'
