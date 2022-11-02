@@ -24,6 +24,13 @@ jobs:
           name: "aws_keys.json"
           json: ${{ secrets.AWS_KEYS }}
           dir: "assets/"
+      - name: create-secret-json
+        id: create-json-1 # First ID
+        uses: jsdaniell/create-json@v1.2.1
+        with:
+          name: "secret.json"
+          json: ${{ secrets.DJANGO_SECERT }}
+          dir: "assets/"
       - name: CloudFoundry push application with different directory
         uses: jhunt/cf-push@main
         with:
