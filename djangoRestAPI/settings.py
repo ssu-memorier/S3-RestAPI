@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import json
+
+from constants import KEY
+
+
+with open(KEY.SECRET_PATH, KEY.READ_MODE, encoding=KEY.UTF8) as f:
+    keys = json.load(f)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%%e+gz0vro82o%nsu+5$h=yntb*cn^*-_(x*k%a^m)f5amt3vf'
+SECRET_KEY = f'django-insecure-{keys["secret"]}'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
