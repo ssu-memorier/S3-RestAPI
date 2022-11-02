@@ -18,7 +18,7 @@ def s3Object(request, uid, keyName):
         path = f"{uid}/{keyName}"
         if request.method == RQ.POST:
             putObject(path, request.data[RQ.DATA])
-            return Response(RQ.SUCCESS, status=status.HTTP_200_OK)
+            return Response(RQ.SUCCESS, status=status.HTTP_201_CREATED)
 
         elif request.method == RQ.GET:
             content = getObject(uid, path)
@@ -26,7 +26,7 @@ def s3Object(request, uid, keyName):
                 return HttpResponse(
                     content, content_type=RQ.PDF, status=status.HTTP_200_OK)
             else:
-                return Response(RQ.FAIL, status=status.HTTP_400_BAD_REQUEST)
+                return Response(RQ.FAIL, status=status.HTTP_404_NOT_FOUND)
 
         elif request.method == RQ.DELETE:
             isDeleted = deleteObject(uid, path)
@@ -35,7 +35,7 @@ def s3Object(request, uid, keyName):
             if isDeleted:
                 return Response(RQ.SUCCESS, status=status.HTTP_200_OK)
             else:
-                return Response(RQ.FAIL, status=status.HTTP_400_BAD_REQUEST)
+                return Response(RQ.FAIL, status=status.HTTP_404_NOT_FOUND)
 
     else:
         return Response(fileSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -50,6 +50,6 @@ def s3Contents(request, uid):
             if contents is not None:
                 return JsonResponse({RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
             else:
-                return Response(None, status=status.HTTP_400_BAD_REQUEST)
+                return Response(None, status=status.HTTP_404_NOT_FOUND)
     else:
         return Response(listSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
