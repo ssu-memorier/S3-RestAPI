@@ -1,4 +1,5 @@
 KEY_PATH = "assets/aws_keys.json"
+SECRET_PATH = "assets/secret.json"
 READ_MODE = "r"
 UTF8 = "utf-8"
 
