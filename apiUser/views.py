@@ -43,7 +43,7 @@ def s3Object(request, uid, keyName):
         return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
 
 
-@ api_view([RQ.GET])
+@api_view([RQ.GET])
 def s3Contents(request, uid):
     listSerializer = ListSerializer(data={RQ.UID: uid})
 
