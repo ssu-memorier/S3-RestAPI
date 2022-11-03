@@ -12,12 +12,6 @@ class FileSerializer(serializers.Serializer):       # file object
     uid = serializers.CharField(max_length=128)
     keyName = serializers.CharField(max_length=1024)
 
-    def errors(self):
-        return status.HTTP_400_BAD_REQUEST
-
 
 class ListSerializer(serializers.Serializer):       # list object
     uid = serializers.CharField(max_length=128)
-
-    def errors(self):
-        return status.HTTP_400_BAD_REQUEST
