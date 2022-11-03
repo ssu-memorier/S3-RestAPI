@@ -13,10 +13,10 @@ def createObject(uid, keyName, data):
             raise KeyError
         s3Client.upload_fileobj(data, s3Bucket, keyName)
 
-        return status.HTTP_200_OK
+        return True
 
     except KeyError:
-        return status.HTTP_400_BAD_REQUEST
+        return False
 
 
 def getObject(uid, keyName):
