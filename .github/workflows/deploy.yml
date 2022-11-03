@@ -17,22 +17,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: create-aws-json
-        id: create-json-1 # First ID
-        uses: jsdaniell/create-json@v1.2.1
-        with:
-          name: "aws_keys.json"
-          json: ${{ secrets.AWS_KEYS }}
-          dir: "assets/"
-      - name: create-secret-json
-        id: create-json-1 # First ID
-        uses: jsdaniell/create-json@v1.2.1
-        with:
-          name: "secret.json"
-          json: ${{ secrets.DJANGO_SECERT }}
-          dir: "assets/"
+
+      - name: Setting .env
+        run: |
+          echo "DjangoKey=$DJANGO_KEY" >> .env
+          echo "AwsAccessKeyId=$AWSACCESSKEYID" >> .env
+          echo "AwsSecretAccessKey=$AWSSECRETACCESSKEY" >> .env
+          echo "AwsStorageBucketName=$AWSSTORAGEBUCKET" >> .env
+        env:
+          DJANGO_KEY: ${{ secrets.DJANGO_KEY }}
+          AWSACCESSKEYID: ${{ secrets.AWS_ACCESSKEYID }}
+          AWSSECRETACCESSKEY: ${{ secrets.AWS_SECRETACCESSKEY }}
+          AWSSTORAGEBUCKET: ${{ secrets.AWS_STORAGEBUCKET }}
+
       - name: CloudFoundry push application with different directory
-        uses: jhunt/cf-push@main
+        uses: jiwonii97/cf-push@main
         with:
           appdir: "." # use the appdir option to select a specif folder where the cf app is stored
           api: ${{ secrets.PAAS_TA_URL }}
