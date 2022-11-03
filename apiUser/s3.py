@@ -1,10 +1,19 @@
 from utils.client import getClientBucket
+from rest_framework import status
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
 
 
-def putObject(keyName, data):
-    s3Client.upload_fileobj(data, s3Bucket, keyName)
+def createObject(uid, keyName, data):
+    contents = [data['Key'] for data in getList(uid)]
+    try:
+        # 해당 파일이 없는 경우 에러
+        if keyName in contents:
+            raise KeyError
+        s3Client.upload_fileobj(data, s3Bucket, keyName)
+        return status.HTTP_200_OK
+    except KeyError:
+        return status.HTTP_400_BAD_REQUEST
 
 
 def getObject(uid, keyName):
