@@ -19,8 +19,12 @@ def s3Object(request, uid, keyName):
     path = f"{uid}/{keyName}"
 
     if request.method == RQ.POST:       # Post
-        rqStatus = createObject(uid, path, request.data[RQ.DATA])
-        return Response(rqStatus, status=status.HTTP_201_CREATED)
+        isCreated = createObject(uid, path, request.data[RQ.DATA])
+
+        if not isCreated:   # 생성이 되지 않은 경우
+            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
 
     elif request.method == RQ.GET:      # Get
         content = getObject(uid, path)
