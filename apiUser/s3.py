@@ -5,7 +5,7 @@ s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정
 
 
 def createObject(uid, keyName, data):
-    contents = [data['Key'] for data in getListobject(uid)]
+    contents = [data['Key'] for data in getListObject(uid)]
 
     try:
         # 해당 파일이 없는 경우 에러
@@ -20,7 +20,7 @@ def createObject(uid, keyName, data):
 
 
 def getObject(uid, keyName):
-    contents = [data['Key'] for data in getListobject(uid)]
+    contents = [data['Key'] for data in getListObject(uid)]
 
     try:
         # 해당 파일이 없는 경우 에러
@@ -35,7 +35,7 @@ def getObject(uid, keyName):
 
 
 def deleteObject(uid, keyName):
-    contents = [data['Key'] for data in getListobject(uid)]
+    contents = [data['Key'] for data in getListObject(uid)]
 
     try:
         # 해당 파일이 없는 경우 에러
@@ -51,12 +51,12 @@ def deleteObject(uid, keyName):
 
 def getList(uid):
     try:
-        contents = getListobject(uid)
+        contents = getListObject(uid)
         return converter.convertContents(contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None
 
 
-def getListobject(uid):  # 해당 userID를 가진 컨텐츠만 가져옴
+def getListObject(uid):  # 해당 userID를 가진 컨텐츠만 가져옴
     return s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)['Contents']
