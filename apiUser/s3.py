@@ -1,5 +1,5 @@
 from utils.client import getClientBucket
-from utils import convert
+from utils import converter
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
 
@@ -53,7 +53,7 @@ def getList(uid):
     try:
         contents = s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)[
             'Contents']       # 해당 userID를 가진 컨텐츠만 가져옴
-        return convert.convertContents(uid, contents)
+        return converter.convertContents(uid, contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None
