@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apiUser.apps.ApiUserConfig',
     'rest_framework',
+    'corsheaders',  # CORS 관련 추가
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',     # CORS 관련 추가
+]
+
+CORS_ORIGIN_WHITELIST = ['http://0.0.0.0:8080', 'http://localhost:8080',
+                         'http://127.0.0.1:3000', 'http://localhost:3000',
+                         "https://gomgukstorage.paas-ta.org"]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "POST",
 ]
 
 ROOT_URLCONF = 'djangoRestAPI.urls'
