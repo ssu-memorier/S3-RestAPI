@@ -1,5 +1,5 @@
 
-def convertContents(uid, contents):
+def convertContents(contents):
     keys = []
     # contents 파싱진행
     for content in contents:
@@ -17,4 +17,4 @@ def convertContents(uid, contents):
             "size": size
         })
 
-    return {"uid": uid, "contents": keys}
+    return keys

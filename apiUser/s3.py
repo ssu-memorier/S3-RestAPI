@@ -53,7 +53,7 @@ def getList(uid):
     try:
         contents = s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)[
             'Contents']       # 해당 userID를 가진 컨텐츠만 가져옴
-        return converter.convertContents(uid, contents)
+        return converter.convertContents(contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None

@@ -56,7 +56,7 @@ class ListViewSet(viewsets.ModelViewSet):
         if contents is None:       # Content가 없으면
             return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
-        return JsonResponse({RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
+        return JsonResponse({'uid': uid, RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
 
 
 def requestValidCheck(serializer, data):    # request가 valid한지 check
