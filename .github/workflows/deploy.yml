@@ -39,5 +39,6 @@ jobs:
           space: ${{ secrets.PAAS_TA_SPACE }}
           username: ${{ secrets.PAAS_TA_USER }}
           password: ${{ secrets.PAAS_TA_PASSWORD }}
+          appname: ${{ secrets.PAAS_TA_APPNAME }}
           manifest: manifest.yml
           validate: true
