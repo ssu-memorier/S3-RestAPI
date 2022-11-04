@@ -1,0 +1,5 @@
+assets/
+__pycache__/
+test.py
+db.sqlite3
+.env

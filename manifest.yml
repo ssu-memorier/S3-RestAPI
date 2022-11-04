@@ -1,0 +1,6 @@
+---
+applications:
+  - name: gomgukStorage
+    buildpack: python_buildpack
+    memory: 512M
+    instances: 1
