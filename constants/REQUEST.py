@@ -10,3 +10,5 @@ FAIL = False
 PDF = "application/pdf"
 
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
+
+DEFAULT_JSON = {"editor": {}, "highlights": []}
