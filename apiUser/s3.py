@@ -49,6 +49,16 @@ def deleteObject(uid, keyName):
         return False
 
 
+def saveJson(keyName, data):
+    try:
+        # 해당 파일이 없는 경우 에러
+        s3Client.upload_fileobj(data, s3Bucket, keyName)
+        return True
+
+    except KeyError:
+        return False
+
+
 def getList(uid):
     try:
         contents = getListObject(uid)
