@@ -2,9 +2,9 @@ from django.urls import path
 from . import views
 
 '''
-    파일 가져오기   GET	    https://<도메인>/file/userA/folderA/.../*.pdf
-    파일 삭제	    DELETE	https://<도메인>/file/userA/folderA/.../*.pdf
-    파일 올리기	    POST	https://<도메인>/file/userA/folderA/.../*.pdf
+    파일 가져오기   GET	    https://<도메인>/file/userA/folderA/.../*
+    파일 삭제	    DELETE	https://<도메인>/file/userA/folderA/.../*
+    파일 올리기	    POST	https://<도메인>/file/userA/folderA/.../*
     
     파일 리스트	    GET	    https://<도메인>/list/userA
 '''
