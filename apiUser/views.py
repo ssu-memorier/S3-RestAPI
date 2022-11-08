@@ -46,6 +46,20 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
 
 
+class MetaViewSet(viewsets.ModelViewSet):
+    def update(self, request, uid, keyName):
+        if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
+            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+
+        path = f"{uid}/{keyName}"
+        isUpdated = saveJson(path, request.data[RQ.DATA])
+
+        if not isUpdated:   # 생성이 되지 않은 경우
+            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
+
+
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, _, uid):
         if not requestValidCheck(ListSerializer, {RQ.UID: uid}):
