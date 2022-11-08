@@ -14,12 +14,16 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
         path = f"{uid}/{keyName}"
-        content = getObject(uid, path)
+        pdfContent, jsonContent = getObject(uid, path)
 
-        if content is None:     # 가져온 파일이 없는경우
+        if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
             return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
-        return HttpResponse(content, content_type=RQ.PDF, status=status.HTTP_200_OK)
+        response = HttpResponse(
+            pdfContent, content_type=RQ.PDF, status=status.HTTP_200_OK)
+        response['metadata'] = jsonContent
+
+        return response
 
     def create(self, request, uid, keyName):
         if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
