@@ -38,10 +38,8 @@ def getObject(uid, keyName):
 
         pdfObject = s3Client.get_object(
             Bucket=s3Bucket, Key=f"{keyName}.pdf")['Body'].read()
-        jsonFile = s3Client.get_object(
+        jsonObject = s3Client.get_object(
             Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read()
-
-        jsonObject = json.loads(jsonFile)
 
         return pdfObject, jsonObject
 
