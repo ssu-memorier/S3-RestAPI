@@ -1,5 +1,8 @@
 from utils.client import getClientBucket
 from utils import converter
+from constants import REQUEST
+
+import json
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
 
@@ -9,9 +12,15 @@ def createObject(uid, keyName, data):
 
     try:
         # 해당 파일이 없는 경우 에러
-        if keyName in contents:
+        if f"{keyName}.pdf" in contents:
             raise KeyError
-        s3Client.upload_fileobj(data, s3Bucket, keyName)
+
+        defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
+
+        s3Client.upload_fileobj(defaultJson, s3Bucket,
+                                f"{keyName}.json")   # json 파일 업로드
+        s3Client.upload_fileobj(
+            data, s3Bucket, f"{keyName}.pdf")   # pdf 파일 업로드
 
         return True
 
@@ -24,11 +33,15 @@ def getObject(uid, keyName):
 
     try:
         # 해당 파일이 없는 경우 에러
-        if keyName not in contents:
+        if f"{keyName}.pdf" not in contents:
             raise KeyError
 
-        return s3Client.get_object(
-            Bucket=s3Bucket, Key=keyName)['Body'].read()
+        pdfObject = s3Client.get_object(
+            Bucket=s3Bucket, Key=f"{keyName}.pdf")['Body'].read()
+        jsonObject = s3Client.get_object(
+            Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read()
+
+        return pdfObject, jsonObject
 
     except KeyError:
         return None
@@ -39,9 +52,10 @@ def deleteObject(uid, keyName):
 
     try:
         # 해당 파일이 없는 경우 에러
-        if keyName not in contents:
+        if f"{keyName}.pdf" not in contents:
             raise KeyError
-        s3Client.delete_object(Bucket=s3Bucket, Key=keyName)
+        s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.pdf")
+        s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.json")
 
         return True
 
