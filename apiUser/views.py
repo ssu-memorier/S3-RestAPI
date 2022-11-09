@@ -10,75 +10,121 @@ from constants import REQUEST as RQ
 
 
 class FileViewSet(viewsets.ModelViewSet):
-    def retrieve(self, _, uid, keyName):
-        if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
+    def retrieve(self, request):
+
+        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data[RQ.KEY] = request.data[RQ.KEY]
+        input_data[RQ.DIR] = request.data[RQ.DIR]
+
+        fileSerializer = FileSerializer(data=input_data)
+
+        if fileSerializer.is_valid(raise_exception=True):
+            uid = fileSerializer.data[RQ.UID]
+            dir = fileSerializer.data[RQ.DIR]
+            key = fileSerializer.data[RQ.KEY]
+
+            filePath = converter.dir2path(uid, dir, key)
+            pdfContent, jsonContent = getObject(uid, filePath)
+
+            if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            # set response
+            response = HttpResponse(
+                content_type=RQ.ZIP, status=status.HTTP_200_OK)
+            response[RQ.CONTENT_DISPOSTION] = RQ.CONTENT_DISPOSTION_BODY
+
+            # add zipFile and datas
+            zipObj = ZipFile(response, 'w')
+            zipObj.writestr(f"{key}.pdf", pdfContent)
+            zipObj.writestr(f"{key}.json", jsonContent)
+
+            return response
+
+        else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
-        path = f"{uid}/{keyName}"
-        pdfContent, jsonContent = getObject(uid, path)
+    def create(self, request):
+        request.data[RQ.UID] = RQ.TEST_UID
+        fileSerializer = FileSerializer(data=request.data)
 
-        if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
-            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+        if fileSerializer.is_valid(raise_exception=True):
+            uid = fileSerializer.data[RQ.UID]
+            dir = fileSerializer.data[RQ.DIR]
+            key = fileSerializer.data[RQ.KEY]
 
-        # set response
-        response = HttpResponse(content_type=RQ.ZIP, status=status.HTTP_200_OK)
-        response[RQ.CONTENT_DISPOSTION] = RQ.CONTENT_DISPOSTION_BODY
+            filePath = converter.dir2path(uid, dir, key)
+            isCreated = createObject(uid, filePath, request.data[RQ.DATA])
 
-        # add zipFile and datas
-        zipObj = ZipFile(response, 'w')
-        zipObj.writestr(f"{keyName}.pdf", pdfContent)
-        zipObj.writestr(f"{keyName}.json", jsonContent)
+            if not isCreated:   # 생성이 되지 않은 경우
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
-        return response
+            return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
 
-    def create(self, request, uid, keyName):
-        if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
+        else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
-        path = f"{uid}/{keyName}"
-        isCreated = createObject(uid, path, request.data[RQ.DATA])
+    def destroy(self, request):
+        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data[RQ.KEY] = request.data[RQ.KEY]
+        input_data[RQ.DIR] = request.data[RQ.DIR]
 
-        if not isCreated:   # 생성이 되지 않은 경우
-            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+        fileSerializer = FileSerializer(data=input_data)
 
-        return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
+        if fileSerializer.is_valid(raise_exception=True):
+            uid = fileSerializer.data[RQ.UID]
+            dir = fileSerializer.data[RQ.DIR]
+            key = fileSerializer.data[RQ.KEY]
 
-    def destroy(self, _, uid, keyName):
-        if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
+            filePath = converter.dir2path(uid, dir, key)
+            isDeleted = deleteObject(uid, filePath)
+
+            if not isDeleted:   # 삭제가 되지 않은 경우
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
+        else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
-        path = f"{uid}/{keyName}"
-        isDeleted = deleteObject(uid, path)
+    def update(self, request):
+        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data[RQ.KEY] = request.data[RQ.KEY]
+        input_data[RQ.DIR] = request.data[RQ.DIR]
 
-        if not isDeleted:   # 삭제가 되지 않은 경우
-            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+        fileSerializer = FileSerializer(data=input_data)
 
-        return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
+        if fileSerializer.is_valid(raise_exception=True):
+            uid = fileSerializer.data[RQ.UID]
+            dir = fileSerializer.data[RQ.DIR]
+            key = fileSerializer.data[RQ.KEY]
 
-    def update(self, request, uid, keyName):
-        if not requestValidCheck(FileSerializer, {RQ.UID: uid, RQ.KEYNAME: keyName}):
+            filePath = converter.dir2path(uid, dir, key)
+            isUpdated = saveJson(filePath, request.data[RQ.DATA])
+
+            if not isUpdated:   # 생성이 되지 않은 경우
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
+        else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-        path = f"{uid}/{keyName}"
-        isUpdated = saveJson(path, request.data[RQ.DATA])
-
-        if not isUpdated:   # 생성이 되지 않은 경우
-            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
-
-        return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
 
 
 class ListViewSet(viewsets.ModelViewSet):
-    def list(self, _, uid):
-        if not requestValidCheck(ListSerializer, {RQ.UID: uid}):
+    def list(self, _):
+
+        listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})
+
+        if listSerializer.is_valid(raise_exception=True):
+            uid = listSerializer.data[RQ.UID]
+            contents = getList(uid)
+
+            if contents is None:       # Content가 없으면
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            return JsonResponse({RQ.UID: RQ.TEST_UID, RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
+        else:
+
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-        contents = getList(uid)
-
-        if contents is None:       # Content가 없으면
-            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
-
-        return JsonResponse({'uid': uid, RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
 
 
 def requestValidCheck(serializer, data):    # request가 valid한지 check
