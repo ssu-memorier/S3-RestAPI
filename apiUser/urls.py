@@ -7,7 +7,7 @@ from . import views
     파일 올리기	    POST	https://<도메인>/file/userA/folderA/.../*
     
     파일 리스트	    GET	    https://<도메인>/list/userA
-    메타데이터 저장  GET	 https://<도메인>/save/userA/folderA/.../*
+    메타데이터 저장  PUT	 https://<도메인>/save/userA/folderA/.../*
 '''
 
 s3Object = views.FileViewSet.as_view({
@@ -20,7 +20,7 @@ s3Contents = views.ListViewSet.as_view({
 })
 
 s3MetaSave = views.MetaViewSet.as_view({
-    'post': 'update'
+    'put': 'update'
 })
 
 urlpatterns = [
