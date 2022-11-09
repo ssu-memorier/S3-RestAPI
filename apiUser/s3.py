@@ -1,7 +1,7 @@
 from utils.client import getClientBucket
 from utils import converter
-
 from constants import REQUEST
+
 import json
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
@@ -15,14 +15,12 @@ def createObject(uid, keyName, data):
         if f"{keyName}.pdf" in contents:
             raise KeyError
 
+        defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
+
+        s3Client.upload_fileobj(defaultJson, s3Bucket,
+                                f"{keyName}.json")   # json 파일 업로드
         s3Client.upload_fileobj(
             data, s3Bucket, f"{keyName}.pdf")   # pdf 파일 업로드
-        defaultJson = json.dumps(REQUEST.DEFAULT_JSON)
-        s3Client.put_object(   # json 파일 업로드
-            Body=defaultJson,
-            Bucket=s3Bucket,
-            Key=f"{keyName}.json"
-        )
 
         return True
 
@@ -38,12 +36,14 @@ def getObject(uid, keyName):
         if f"{keyName}.pdf" not in contents:
             raise KeyError
 
-        pdfFile = s3Client.get_object(
+        pdfObject = s3Client.get_object(
             Bucket=s3Bucket, Key=f"{keyName}.pdf")['Body'].read()
-        jsonFile = json.loads(s3Client.get_object(
-            Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read())
+        jsonFile = s3Client.get_object(
+            Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read()
 
-        return pdfFile, json.dumps(jsonFile)
+        jsonObject = json.loads(jsonFile)
+
+        return pdfObject, jsonObject
 
     except KeyError:
         return None
