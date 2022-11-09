@@ -1,3 +1,6 @@
+import io
+import json
+
 
 def convertContents(contents):
     keys = []
@@ -20,3 +23,8 @@ def convertContents(contents):
         })
 
     return keys
+
+
+def str2byteIO(content):
+    # string -> bytes -> byteIO
+    return io.BytesIO(json.dumps(content).encode('utf-8'))
