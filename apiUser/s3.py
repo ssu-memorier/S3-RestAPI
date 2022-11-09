@@ -9,12 +9,11 @@ def createObject(uid, keyName, data):
     contents = [data['Key'] for data in getListObject(uid)]
 
     try:
-        # 해당 파일이 없는 경우 에러
+        # 해당 파일이 있는 경우 에러
         if f"{keyName}.pdf" in contents:
             raise KeyError
 
         defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
-
         s3Client.upload_fileobj(defaultJson, s3Bucket,
                                 f"{keyName}.json")   # json 파일 업로드
         s3Client.upload_fileobj(
