@@ -16,7 +16,7 @@ def convertContents(contents):
         size = content["Size"]
 
         keys.append({
-            "key": key,
+            "key": key.split('.')[0],
             "dir": dir,
             "lastModified": lastModified,
             "size": size
