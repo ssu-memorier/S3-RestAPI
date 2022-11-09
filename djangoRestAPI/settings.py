@@ -71,6 +71,7 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
     "POST",
+    "PUT",
 ]
 
 ROOT_URLCONF = 'djangoRestAPI.urls'
@@ -100,7 +101,7 @@ WSGI_APPLICATION = 'djangoRestAPI.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # mysqlclient librarly 설치
-        'NAME': 'myboard',
+        'NAME': 'storage',
         'USER': 'root',
         'PASSWORD': '794867',  # mariaDB 설치 시 입력한 root 비밀번호 입력
         'HOST': 'localhost',
