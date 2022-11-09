@@ -2,8 +2,6 @@ from utils.client import getClientBucket
 from utils import converter
 from constants import REQUEST
 
-import json
-
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
 
 
@@ -65,8 +63,9 @@ def deleteObject(uid, keyName):
 
 def saveJson(keyName, data):
     try:
-        # 해당 파일이 없는 경우 에러
-        s3Client.upload_fileobj(data, s3Bucket, keyName)
+        jsonObject = converter.str2byteIO(data)
+        s3Client.upload_fileobj(jsonObject, s3Bucket,
+                                f"{keyName}.json")   # json 파일 업로드
         return True
 
     except KeyError:
