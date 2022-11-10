@@ -24,10 +24,7 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
-            try:
-                # DB에 데이터가 있는지 우선 확인
-                Content.objects.get(uid=uid, dir=dir, key=key)
-            except:
+            if not isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
             filePath = converter.dir2path(uid, dir, key)
@@ -61,12 +58,8 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.validated_data[RQ.DIR]
             key = fileSerializer.validated_data[RQ.KEY]
 
-            try:
-                # DB에 데이터가 있는지 우선 확인
-                Content.objects.get(uid=uid, dir=dir, key=key)  # 없는 경우에만 함수 진행
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
-            except:
-                pass
+            if isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_403_FORBIDDEN, status=status.HTTP_403_FORBIDDEN)
 
             # S3 생성
             filePath = converter.dir2path(uid, dir, key)
@@ -93,10 +86,7 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
-            try:
-                # DB에 데이터가 있는지 우선 확인
-                Content.objects.get(uid=uid, dir=dir, key=key)
-            except:
+            if not isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
             # S3 삭제
@@ -125,6 +115,9 @@ class FileViewSet(viewsets.ModelViewSet):
             uid = fileSerializer.data[RQ.UID]
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
+
+            if not isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
             filePath = converter.dir2path(uid, dir, key)
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
@@ -156,3 +149,11 @@ class ListViewSet(viewsets.ModelViewSet):
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+
+
+def isObjectExist(uid, dir, key):
+    try:
+        Content.objects.get(uid=uid, dir=dir, key=key)
+        return True
+    except:
+        return False
