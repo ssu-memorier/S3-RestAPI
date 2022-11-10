@@ -21,8 +21,10 @@ load_dotenv()   # load .env
 BASE_DIR = Path(__file__).resolve().parent.parent
 key = os.environ.get(KEY.DJANGOKEY)
 
+# Django Secret
 engine = os.environ.get("ENGINE")
 
+# DB Secret
 name = os.environ.get("NAME")
 user = os.environ.get("USER")
 password = os.environ.get("PASSWORD")
