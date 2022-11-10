@@ -1,5 +1,6 @@
 import io
 import json
+from pathlib import Path
 
 
 def convertContents(contents):
@@ -10,13 +11,15 @@ def convertContents(contents):
             continue
 
         tokens = content['Key'].split('/')
-        dir, key = '/'.join(tokens[:-1]), tokens[-1]
+        dir, key = '/'.join(tokens[1:-1]), tokens[-1]
 
         lastModified = content["LastModified"]
         size = content["Size"]
 
+        keyName = '.'.join(key.split('.')[:-1])
+
         keys.append({
-            "key": key.split('.')[0],
+            "key": keyName,
             "dir": dir,
             "lastModified": lastModified,
             "size": size
@@ -28,3 +31,7 @@ def convertContents(contents):
 def str2byteIO(content):
     # string -> bytes -> byteIO
     return io.BytesIO(json.dumps(content).encode('utf-8'))
+
+
+def dir2path(uid, dir, file):
+    return str(Path(uid) / dir / file).replace('\\', '/')
