@@ -7,6 +7,7 @@ from .s3 import *
 from .serializers import FileSerializer, ListSerializer
 
 from constants import REQUEST as RQ
+from .models import Content
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -23,8 +24,14 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            try:
+                # DB에 데이터가 있는지 우선 확인
+                Content.objects.get(uid=uid, dir=dir, key=key)
+            except:
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
             filePath = converter.dir2path(uid, dir, key)
-            pdfContent, jsonContent = getObject(uid, filePath)
+            pdfContent, jsonContent = getObject(filePath)
 
             if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
@@ -49,16 +56,26 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=request.data)
 
         if fileSerializer.is_valid(raise_exception=True):
+
             uid = fileSerializer.data[RQ.UID]
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            try:
+                # DB에 데이터가 있는지 우선 확인
+                Content.objects.get(uid=uid, dir=dir, key=key)
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+            except:
+                pass
+
+            # S3 생성
             filePath = converter.dir2path(uid, dir, key)
             isCreated = createObject(uid, filePath, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
+            fileSerializer.save()       # DB 생성
             return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
 
         else:
@@ -76,11 +93,22 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            try:
+                # DB에 데이터가 있는지 우선 확인
+                Content.objects.get(uid=uid, dir=dir, key=key)
+            except:
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            # S3 삭제
             filePath = converter.dir2path(uid, dir, key)
-            isDeleted = deleteObject(uid, filePath)
+            isDeleted = deleteObject(filePath)
 
             if not isDeleted:   # 삭제가 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            # DB 삭제
+            content = Content.objects.get(uid=uid, dir=dir, key=key)
+            content.delete()
 
             return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
         else:
@@ -111,6 +139,11 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, _):
+        contents = Content.objects.filter(uid=RQ.TEST_UID)
+
+        # DB상 uid 정보가 없는 경우
+        if not contents:
+            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
         listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})
 
@@ -125,7 +158,3 @@ class ListViewSet(viewsets.ModelViewSet):
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-
-def requestValidCheck(serializer, data):    # request가 valid한지 check
-    return serializer(data=data).is_valid()
