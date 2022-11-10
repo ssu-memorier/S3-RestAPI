@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 '''
-    파일 가져오기   GET	    https://<도메인>/file
+    파일 가져오기   GET	    https://<도메인>/file?key=(파일명)&dir=(디렉토리명)
     파일 삭제	    DELETE	https://<도메인>/file
     파일 올리기	    POST	https://<도메인>/file
     메타데이터 저장  PUT	 https://<도메인>/file
