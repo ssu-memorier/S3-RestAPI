@@ -21,6 +21,14 @@ load_dotenv()   # load .env
 BASE_DIR = Path(__file__).resolve().parent.parent
 key = os.environ.get(KEY.DJANGOKEY)
 
+engine = os.environ.get("ENGINE")
+
+name = os.environ.get("NAME")
+user = os.environ.get("USER")
+password = os.environ.get("PASSWORD")
+host = os.environ.get("HOST")
+port = os.environ.get("PORT")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -101,12 +109,12 @@ WSGI_APPLICATION = 'djangoRestAPI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # mysqlclient librarly 설치
-        'NAME': 'storage',
-        'USER': 'root',
-        'PASSWORD': '794867',  # mariaDB 설치 시 입력한 root 비밀번호 입력
-        'HOST': 'localhost',
-        'PORT': ''
+        'ENGINE': engine,  # mysqlclient librarly 설치
+        'NAME': name,
+        'USER': user,
+        'PASSWORD': password,  # mariaDB 설치 시 입력한 root 비밀번호 입력
+        'HOST': host,
+        'PORT': port
     }
 }
 
