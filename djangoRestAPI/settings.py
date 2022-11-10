@@ -72,6 +72,7 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
     "POST",
+    "PUT",
 ]
 
 ROOT_URLCONF = 'djangoRestAPI.urls'
