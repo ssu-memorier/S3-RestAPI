@@ -19,4 +19,20 @@ CONTENT_DISPOSTION_BODY = 'attachment; filename=data.zip'
 
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
 
-DEFAULT_JSON = {"editor": {}, "highlights": []}
+DEFAULT_JSON = {
+    "editor": {
+        "time": 0,
+        "blocks": [
+            {
+                "id": '3W6kMa4BtB',
+                "type": 'header',
+                "data": {
+                    "text": '',
+                    "level": 2
+                },
+            },
+        ],
+        "version": '2.25.0',
+    },
+    "highlights": []
+}
