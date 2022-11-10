@@ -13,8 +13,8 @@ class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
 
         input_data = {RQ.UID: RQ.TEST_UID}
-        input_data[RQ.KEY] = request.data[RQ.KEY]
-        input_data[RQ.DIR] = request.data[RQ.DIR]
+        input_data[RQ.KEY] = request.GET[RQ.KEY]
+        input_data[RQ.DIR] = request.GET[RQ.DIR]
 
         fileSerializer = FileSerializer(data=input_data)
 
