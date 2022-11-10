@@ -25,39 +25,20 @@ def createObject(uid, keyName, data):
         return False
 
 
-def getObject(uid, keyName):
-    contents = [data['Key'] for data in getListObject(uid)]
+def getObject(keyName):
+    pdfObject = s3Client.get_object(
+        Bucket=s3Bucket, Key=f"{keyName}.pdf")['Body'].read()
+    jsonObject = s3Client.get_object(
+        Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read()
 
-    try:
-        # 해당 파일이 없는 경우 에러
-        if f"{keyName}.pdf" not in contents:
-            raise KeyError
-
-        pdfObject = s3Client.get_object(
-            Bucket=s3Bucket, Key=f"{keyName}.pdf")['Body'].read()
-        jsonObject = s3Client.get_object(
-            Bucket=s3Bucket, Key=f"{keyName}.json")['Body'].read()
-
-        return pdfObject, jsonObject
-
-    except KeyError:
-        return None
+    return pdfObject, jsonObject
 
 
-def deleteObject(uid, keyName):
-    contents = [data['Key'] for data in getListObject(uid)]
+def deleteObject(keyName):
+    s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.pdf")
+    s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.json")
 
-    try:
-        # 해당 파일이 없는 경우 에러
-        if f"{keyName}.pdf" not in contents:
-            raise KeyError
-        s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.pdf")
-        s3Client.delete_object(Bucket=s3Bucket, Key=f"{keyName}.json")
-
-        return True
-
-    except KeyError:
-        return False
+    return True
 
 
 def saveJson(keyName, data):
@@ -74,7 +55,7 @@ def saveJson(keyName, data):
 def getList(uid):
     try:
         contents = getListObject(uid)
-        return converter.convertContents(contents)
+        return converter.contents2List(contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None
