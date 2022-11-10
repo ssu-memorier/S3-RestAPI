@@ -62,9 +62,9 @@ CORS_ORIGIN_WHITELIST = ['http://0.0.0.0:8080', 'http://localhost:8080',
                          'http://127.0.0.1:3000', 'http://localhost:3000',
                          "https://gomgukstorage.paas-ta.org",
                          "https://gomguk.net",
+                         "https://ssu-memorier.github.io",
                          "http://gomguk-fe-development.s3-website.ap-northeast-2.amazonaws.com",
                          "http://gomguk.net.s3-website.ap-northeast-2.amazonaws.com",
-                         #  "https://ssu-memorier.github.io/gomguk-viewer-fe",
                          ]
 
 CORS_ALLOW_CREDENTIALS = True
