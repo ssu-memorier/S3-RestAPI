@@ -11,7 +11,7 @@ def convertContents(contents):
             continue
 
         tokens = content['Key'].split('/')
-        dir, key = '/'.join(tokens[:-1]), tokens[-1]
+        dir, key = '/'.join(tokens[1:-1]), tokens[-1]
 
         lastModified = content["LastModified"]
         size = content["Size"]
