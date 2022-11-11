@@ -134,7 +134,7 @@ class FileViewSet(viewsets.ModelViewSet):
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, _):
         # DB상 uid 정보가 없는 경우
-        if not Content.objects.filter(uid=RQ.TEST_UID):
+        if not check.isUidExist(RQ.TEST_UID):
             return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
         listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})

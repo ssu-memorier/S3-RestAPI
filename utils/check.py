@@ -7,3 +7,7 @@ def isObjectExist(uid, dir, key):
         return True
     except:
         return False
+
+
+def isUidExist(uid):
+    return Content.objects.filter(uid=uid)
