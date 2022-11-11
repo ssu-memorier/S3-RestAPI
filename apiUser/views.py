@@ -7,6 +7,8 @@ from .s3 import *
 from .serializers import FileSerializer, ListSerializer
 
 from constants import REQUEST as RQ
+from .models import Content
+from utils import check
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -23,8 +25,11 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            if not check.isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
             filePath = converter.dir2path(uid, dir, key)
-            pdfContent, jsonContent = getObject(uid, filePath)
+            pdfContent, jsonContent = getObject(filePath)
 
             if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
@@ -49,16 +54,22 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=request.data)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid = fileSerializer.data[RQ.UID]
-            dir = fileSerializer.data[RQ.DIR]
-            key = fileSerializer.data[RQ.KEY]
 
+            uid = fileSerializer.validated_data[RQ.UID]
+            dir = fileSerializer.validated_data[RQ.DIR]
+            key = fileSerializer.validated_data[RQ.KEY]
+
+            if check.isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_403_FORBIDDEN, status=status.HTTP_403_FORBIDDEN)
+
+            # S3 생성
             filePath = converter.dir2path(uid, dir, key)
-            isCreated = createObject(uid, filePath, request.data[RQ.DATA])
+            isCreated = createObject(filePath, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
+            fileSerializer.save()       # DB 생성
             return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
 
         else:
@@ -76,11 +87,19 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            if not check.isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            # S3 삭제
             filePath = converter.dir2path(uid, dir, key)
-            isDeleted = deleteObject(uid, filePath)
+            isDeleted = deleteObject(filePath)
 
             if not isDeleted:   # 삭제가 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
+            # DB 삭제
+            content = Content.objects.get(uid=uid, dir=dir, key=key)
+            content.delete()
 
             return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
         else:
@@ -98,6 +117,9 @@ class FileViewSet(viewsets.ModelViewSet):
             dir = fileSerializer.data[RQ.DIR]
             key = fileSerializer.data[RQ.KEY]
 
+            if not check.isObjectExist(uid, dir, key):    # DB에 데이터가 있는지 우선 확인
+                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+
             filePath = converter.dir2path(uid, dir, key)
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
 
@@ -111,6 +133,9 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, _):
+        # DB상 uid 정보가 없는 경우
+        if not check.isUidExist(RQ.TEST_UID):
+            return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
         listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})
 
@@ -125,7 +150,3 @@ class ListViewSet(viewsets.ModelViewSet):
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-
-def requestValidCheck(serializer, data):    # request가 valid한지 check
-    return serializer(data=data).is_valid()

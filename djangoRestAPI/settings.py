@@ -21,6 +21,16 @@ load_dotenv()   # load .env
 BASE_DIR = Path(__file__).resolve().parent.parent
 key = os.environ.get(KEY.DJANGOKEY)
 
+# Django Secret
+engine = os.environ.get("ENGINE")
+
+# DB Secret
+name = os.environ.get("NAME")
+user = os.environ.get("USER")
+password = os.environ.get("PASSWORD")
+host = os.environ.get("HOST")
+port = os.environ.get("PORT")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -72,6 +82,7 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
     "POST",
+    "PUT",
 ]
 
 ROOT_URLCONF = 'djangoRestAPI.urls'
@@ -100,8 +111,12 @@ WSGI_APPLICATION = 'djangoRestAPI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': engine,  # mysqlclient librarly 설치
+        'NAME': name,
+        'USER': user,
+        'PASSWORD': password,  # mariaDB 설치 시 입력한 root 비밀번호 입력
+        'HOST': host,
+        'PORT': port
     }
 }
 
@@ -130,11 +145,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
+USE_TZ = True
 
 USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

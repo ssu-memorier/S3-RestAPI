@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 
-def convertContents(contents):
+def contents2List(contents):
     keys = []
     # contents 파싱진행
     for content in contents:
