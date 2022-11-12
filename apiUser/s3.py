@@ -1,6 +1,5 @@
 from utils.client import getClientBucket
-from utils import converter
-from utils import elements
+from utils import converter, elements
 from constants import REQUEST
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
