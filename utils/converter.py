@@ -3,7 +3,8 @@ import json
 from pathlib import Path
 
 import jwt
-import hashlib
+
+from constants import REQUEST as RQ
 
 
 def contents2List(contents):
@@ -40,10 +41,13 @@ def dir2path(uid, dir, file):
     return str(Path(uid) / dir / file).replace('\\', '/')
 
 
-def token2hash(token):
-    decoded = jwt.decode(token, options={"verify_signature": False})
+def jwtTokenDecoder(token):
+    return jwt.decode(token, options={"verify_signature": False})
 
-    email = decoded['email']
-    provider = decoded['provider']
 
-    return hashlib.sha256((provider+'/'+email).encode()).hexdigest()
+def serializeUidDirKey(data):
+    uid = data[RQ.UID]
+    dir = data[RQ.DIR]
+    key = data[RQ.KEY]
+
+    return uid, dir, key
