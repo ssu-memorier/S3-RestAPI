@@ -2,6 +2,9 @@ import io
 import json
 from pathlib import Path
 
+import jwt
+import hashlib
+
 
 def convertContents(contents):
     keys = []
@@ -35,3 +38,12 @@ def str2byteIO(content):
 
 def dir2path(uid, dir, file):
     return str(Path(uid) / dir / file).replace('\\', '/')
+
+
+def token2hash(token):
+    decoded = jwt.decode(token, options={"verify_signature": False})
+
+    email = decoded['email']
+    provider = decoded['provider']
+
+    return hashlib.sha256((provider+'/'+email).encode()).hexdigest()
