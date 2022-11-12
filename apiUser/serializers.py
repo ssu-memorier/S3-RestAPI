@@ -8,10 +8,10 @@ from rest_framework import serializers
 
 
 class FileSerializer(serializers.Serializer):       # file object
-    uid = serializers.CharField(max_length=128)
-    dir = serializers.CharField(max_length=128, allow_blank=True)
-    key = serializers.CharField(max_length=1024)
+    uid = serializers.CharField(max_length=64)
+    dir = serializers.CharField(max_length=200, allow_blank=True)
+    key = serializers.CharField(max_length=100)
 
 
 class ListSerializer(serializers.Serializer):       # list object
-    uid = serializers.CharField(max_length=128)
+    uid = serializers.CharField(max_length=64)
