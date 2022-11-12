@@ -6,7 +6,7 @@ import jwt
 import hashlib
 
 
-def convertContents(contents):
+def contents2List(contents):
     keys = []
     # contents 파싱진행
     for content in contents:
