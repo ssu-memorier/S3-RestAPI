@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from .models import Content
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여
@@ -8,13 +7,10 @@ from .models import Content
 '''
 
 
-class FileSerializer(serializers.ModelSerializer):       # file object
-    class Meta:
-        model = Content
-        fields = '__all__'
-
-    def create(self, validated_data):
-        return Content.objects.create(**validated_data)
+class FileSerializer(serializers.Serializer):       # file object
+    uid = serializers.CharField(max_length=128)
+    dir = serializers.CharField(max_length=128, allow_blank=True)
+    key = serializers.CharField(max_length=1024)
 
 
 class ListSerializer(serializers.Serializer):       # list object

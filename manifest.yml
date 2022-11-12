@@ -1,6 +1,8 @@
 ---
 applications:
-  - name: gomgukStorage
+  - name: testgomgukStorage
     buildpack: python_buildpack
-    memory: 512M
+    memory: 1G
     instances: 1
+    env:
+      DISABLE_COLLECTSTATIC: 1

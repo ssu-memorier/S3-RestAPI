@@ -21,6 +21,7 @@ load_dotenv()   # load .env
 BASE_DIR = Path(__file__).resolve().parent.parent
 key = os.environ.get(KEY.DJANGOKEY)
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -72,6 +73,7 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
     "POST",
+    "PUT",
 ]
 
 ROOT_URLCONF = 'djangoRestAPI.urls'
@@ -130,11 +132,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
+USE_TZ = True
 
 USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
