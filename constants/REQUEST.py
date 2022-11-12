@@ -36,3 +36,5 @@ DEFAULT_JSON = {
     },
     "highlights": []
 }
+
+DEFAULT_OBJECT_LIST = [{'Key': ""}]
