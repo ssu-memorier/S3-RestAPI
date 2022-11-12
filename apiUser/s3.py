@@ -7,7 +7,6 @@ s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정
 
 def createObject(uid, keyName, data):
     contents = [data['Key'] for data in getListObject(uid)]
-
     try:
         # 해당 파일이 있는 경우 에러
         if f"{keyName}.pdf" in contents:
@@ -18,7 +17,6 @@ def createObject(uid, keyName, data):
                                 f"{keyName}.json")   # json 파일 업로드
         s3Client.upload_fileobj(
             data, s3Bucket, f"{keyName}.pdf")   # pdf 파일 업로드
-
         return True
 
     except KeyError:
@@ -74,11 +72,14 @@ def saveJson(keyName, data):
 def getList(uid):
     try:
         contents = getListObject(uid)
-        return converter.convertContents(contents)
+        return converter.contents2List(contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None
 
 
 def getListObject(uid):  # 해당 userID를 가진 컨텐츠만 가져옴
-    return s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)['Contents']
+    try:
+        return s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)['Contents']
+    except KeyError:
+        return REQUEST.DEFAULT_OBJECT_LIST
