@@ -13,6 +13,10 @@ class FileSerializer(serializers.Serializer):       # file object
     dir = serializers.CharField(max_length=MODEL.DIR_LENGTH, allow_blank=True)
     key = serializers.CharField(max_length=MODEL.KEY_LENGTH)
 
+    @property
+    def elements(self):
+        return self.data.values()
+
 
 class ListSerializer(serializers.Serializer):       # list object
     uid = serializers.CharField(max_length=MODEL.UID_LENGTH)

@@ -17,7 +17,7 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=input_data)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid, dir, key = converter.serializeUidDirKey(fileSerializer.data)
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             pdfContent, jsonContent = getObject(uid, filePath)
@@ -46,7 +46,7 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=input_data)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid, dir, key = converter.serializeUidDirKey(fileSerializer.data)
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             isCreated = createObject(uid, filePath, request.data[RQ.DATA])
@@ -64,7 +64,7 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=input_data)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid, dir, key = converter.serializeUidDirKey(fileSerializer.data)
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             isDeleted = deleteObject(uid, filePath)
@@ -82,7 +82,7 @@ class FileViewSet(viewsets.ModelViewSet):
         fileSerializer = FileSerializer(data=input_data)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid, dir, key = converter.serializeUidDirKey(fileSerializer.data)
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
