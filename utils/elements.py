@@ -5,11 +5,7 @@ from constants import REQUEST as RQ
 import hashlib
 
 
-def getUid(jwtToken):
-    decoded = converter.jwtTokenDecoder(jwtToken)
-    email = decoded['email']
-    provider = decoded['provider']
-
+def getUid(email, provider):
     newKeyword = provider+'/'+email
     return hashlib.sha256(newKeyword.encode()).hexdigest()
 
@@ -26,7 +22,11 @@ def getContents(listObject):
 
 
 def getSerializerInputData(tokenData, keyDirData):
-    uid = getUid(tokenData[RQ.TOKEN])
+    decoded = converter.jwtTokenDecoder(tokenData[RQ.TOKEN])
+    email = decoded['email']
+    provider = decoded['provider']
+
+    uid = getUid(email, provider)
 
     input_data = {RQ.UID: uid}
     input_data[RQ.KEY] = keyDirData[RQ.KEY]
