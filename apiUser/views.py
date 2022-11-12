@@ -12,7 +12,7 @@ from constants import REQUEST as RQ
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
 
-        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data = {RQ.UID: converter.token2hash(request.headers['token'])}
         input_data[RQ.KEY] = request.GET[RQ.KEY]
         input_data[RQ.DIR] = request.GET[RQ.DIR]
 
@@ -45,7 +45,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        request.data[RQ.UID] = RQ.TEST_UID
+        request.data[RQ.UID] = converter.token2hash(request.headers['token'])
         fileSerializer = FileSerializer(data=request.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -60,12 +60,11 @@ class FileViewSet(viewsets.ModelViewSet):
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
             return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
-
         else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data = {RQ.UID: converter.token2hash(request.headers['token'])}
         input_data[RQ.KEY] = request.data[RQ.KEY]
         input_data[RQ.DIR] = request.data[RQ.DIR]
 
@@ -87,7 +86,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        input_data = {RQ.UID: RQ.TEST_UID}
+        input_data = {RQ.UID: converter.token2hash(request.headers['token'])}
         input_data[RQ.KEY] = request.data[RQ.KEY]
         input_data[RQ.DIR] = request.data[RQ.DIR]
 
@@ -110,9 +109,10 @@ class FileViewSet(viewsets.ModelViewSet):
 
 
 class ListViewSet(viewsets.ModelViewSet):
-    def list(self, _):
+    def list(self, request):
 
-        listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})
+        listSerializer = ListSerializer(
+            data={RQ.UID: converter.token2hash(request.headers['token'])})
 
         if listSerializer.is_valid(raise_exception=True):
             uid = listSerializer.data[RQ.UID]
@@ -125,7 +125,3 @@ class ListViewSet(viewsets.ModelViewSet):
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-
-def requestValidCheck(serializer, data):    # request가 valid한지 check
-    return serializer(data=data).is_valid()
