@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import json
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -109,16 +110,42 @@ WSGI_APPLICATION = 'djangoRestAPI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# if 'VCAP_SERVICES' in os.environ:
+#     vcap_services = json.loads(os.environ['VCAP_SERVICES'])
+
+#     if 'Mysql-DB' in vcap_services:
+#         mysql_srv = vcap_services['Mysql-DB'][0]
+#         mysql_cred = mysql_srv['credentials']
+
+#         DATABASES = {
+#             'default': {
+#                 'ENGINE': 'django.db.backends.mysql',
+#                 'NAME': mysql_cred['name'],
+#                 'USER': mysql_cred['username'],
+#                 'PASSWORD': mysql_cred['password'],
+#                 'HOST': mysql_cred['hostname'],
+#                 'PORT': mysql_cred['port'],
+#             },
+#         }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': engine,  # mysqlclient librarly 설치
-        'NAME': name,
-        'USER': user,
-        'PASSWORD': password,  # mariaDB 설치 시 입력한 root 비밀번호 입력
-        'HOST': host,
-        'PORT': port
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "op_eaf7cfc0_2b84_4f08_ba86_ee5c8f4cd6a5",
+        'USER': "99c8fbbcc22dc1f4",
+        'PASSWORD': "7931d76bf99cb50f",
+        'HOST': "10.0.40.143",
+        'PORT': "13307",
+    },
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
