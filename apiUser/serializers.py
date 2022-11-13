@@ -1,9 +1,5 @@
 from rest_framework import serializers
-
-UID_LENGTH = 64
-DIR_LENGTH = 200
-KEY_LENGTH = 100
-
+from utils.elements import FileMeta
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여
@@ -13,9 +9,10 @@ KEY_LENGTH = 100
 
 
 class FileSerializer(serializers.Serializer):       # file object
-    uid = serializers.CharField(max_length=UID_LENGTH)
-    dir = serializers.CharField(max_length=DIR_LENGTH, allow_blank=True)
-    key = serializers.CharField(max_length=KEY_LENGTH)
+    uid = serializers.CharField(max_length=FileMeta.UID_LENGTH)
+    dir = serializers.CharField(
+        max_length=FileMeta.DIR_LENGTH, allow_blank=True)
+    key = serializers.CharField(max_length=FileMeta.KEY_LENGTH)
 
     @property
     def elements(self):
@@ -23,4 +20,4 @@ class FileSerializer(serializers.Serializer):       # file object
 
 
 class ListSerializer(serializers.Serializer):       # list object
-    uid = serializers.CharField(max_length=UID_LENGTH)
+    uid = serializers.CharField(max_length=FileMeta.UID_LENGTH)
