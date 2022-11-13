@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from constants import MODEL
+
+UID_LENGTH = 64
+DIR_LENGTH = 200
+KEY_LENGTH = 100
+
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여
@@ -9,9 +13,9 @@ from constants import MODEL
 
 
 class FileSerializer(serializers.Serializer):       # file object
-    uid = serializers.CharField(max_length=MODEL.UID_LENGTH)
-    dir = serializers.CharField(max_length=MODEL.DIR_LENGTH, allow_blank=True)
-    key = serializers.CharField(max_length=MODEL.KEY_LENGTH)
+    uid = serializers.CharField(max_length=UID_LENGTH)
+    dir = serializers.CharField(max_length=DIR_LENGTH, allow_blank=True)
+    key = serializers.CharField(max_length=KEY_LENGTH)
 
     @property
     def elements(self):
@@ -19,4 +23,4 @@ class FileSerializer(serializers.Serializer):       # file object
 
 
 class ListSerializer(serializers.Serializer):       # list object
-    uid = serializers.CharField(max_length=MODEL.UID_LENGTH)
+    uid = serializers.CharField(max_length=UID_LENGTH)
