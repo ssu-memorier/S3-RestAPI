@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from utils.elements import FileMeta
+from classes.Elements import FileMeta
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여

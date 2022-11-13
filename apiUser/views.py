@@ -5,6 +5,7 @@ from zipfile import ZipFile
 
 from .s3 import *
 from .serializers import FileSerializer, ListSerializer
+from classes import Elements
 from utils import elements
 
 from constants import REQUEST as RQ
@@ -16,10 +17,10 @@ HEADER = {RQ.TOKEN: TEST_JWT}
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-        # file = elements.FileMeta(request.headers, request.GET)
+        # file = Elements.FileMeta(request.headers, request.GET)
 
         # 데모 목적 JWT 추가
-        file = elements.FileMeta(HEADER, request.GET)
+        file = Elements.FileMeta(HEADER, request.GET)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -47,10 +48,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        # file = elements.FileMeta(request.headers, request.data)
+        # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = elements.FileMeta(HEADER, request.data)
+        file = Elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -67,10 +68,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        # file = elements.FileMeta(request.headers, request.data)
+        # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = elements.FileMeta(HEADER, request.data)
+        file = Elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -87,10 +88,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        # file = elements.FileMeta(request.headers, request.data)
+        # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = elements.FileMeta(HEADER, request.data)
+        file = Elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
