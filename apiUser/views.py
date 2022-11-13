@@ -9,10 +9,17 @@ from utils import elements
 
 from constants import REQUEST as RQ
 
+# 임시 JWT 토큰
+TEST_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlkdzUyMTBAbmF2ZXIuY29tIiwicHJvdmlkZXIiOiJrYWthbyIsInJlZnJlc2hUb2tlbiI6ImJ4VjlndExpUFFrSWxxUzV2RGNCTXBsQ3NxRDdxMXpoRXdXWWNXZ1ZDajEwYUFBQUFZUllFSjhzIiwiaWF0IjoxNjY4MDkxMjE5fQ.M8-32Z80kShpmlaDQeoOyN0G_8UtSYV7QbDHR2Ew-WU%22%7D'
+HEADER = {RQ.TOKEN: TEST_JWT}
+
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-        file = elements.FileMeta(request.headers, request.GET)
+        # file = elements.FileMeta(request.headers, request.GET)
+
+        # 데모 목적 JWT 추가
+        file = elements.FileMeta(HEADER, request.GET)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -40,7 +47,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        file = elements.FileMeta(request.headers, request.data)
+        # file = elements.FileMeta(request.headers, request.data)
+
+        # 데모 목적 JWT 추가
+        file = elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -57,7 +67,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        file = elements.FileMeta(request.headers, request.data)
+        # file = elements.FileMeta(request.headers, request.data)
+
+        # 데모 목적 JWT 추가
+        file = elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -74,7 +87,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        file = elements.FileMeta(request.headers, request.data)
+        # file = elements.FileMeta(request.headers, request.data)
+
+        # 데모 목적 JWT 추가
+        file = elements.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -93,7 +109,13 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
-        inputData = {RQ.UID: elements.getUid(request.headers[RQ.TOKEN])}
+        # inputData = {RQ.UID: elements.getUid(request.headers[RQ.TOKEN])}
+
+        # 데모 목적 JWT 추가
+        decoded = converter.jwtTokenDecoder(TEST_JWT)
+        inputData = {RQ.UID: elements.getUid(
+            decoded['email'], decoded['provider'])}
+
         listSerializer = ListSerializer(data=inputData)
 
         if listSerializer.is_valid(raise_exception=True):
