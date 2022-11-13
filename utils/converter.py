@@ -43,11 +43,3 @@ def dir2path(uid, dir, file):
 
 def jwtTokenDecoder(token):
     return jwt.decode(token, options={"verify_signature": False})
-
-
-def serializeUidDirKey(data):
-    uid = data[RQ.UID]
-    dir = data[RQ.DIR]
-    key = data[RQ.KEY]
-
-    return uid, dir, key
