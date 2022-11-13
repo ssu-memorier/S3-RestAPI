@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Content
+from classes.FileMeta import FileMeta
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여
@@ -8,14 +8,16 @@ from .models import Content
 '''
 
 
-class FileSerializer(serializers.ModelSerializer):       # file object
-    class Meta:
-        model = Content
-        fields = '__all__'
+class FileSerializer(serializers.Serializer):       # file object
+    uid = serializers.CharField(max_length=FileMeta.UID_LENGTH)
+    dir = serializers.CharField(
+        max_length=FileMeta.DIR_LENGTH, allow_blank=True)
+    key = serializers.CharField(max_length=FileMeta.KEY_LENGTH)
 
-    def create(self, validated_data):
-        return Content.objects.create(**validated_data)
+    @property
+    def elements(self):
+        return self.data.values()
 
 
 class ListSerializer(serializers.Serializer):       # list object
-    uid = serializers.CharField(max_length=128)
+    uid = serializers.CharField(max_length=FileMeta.UID_LENGTH)

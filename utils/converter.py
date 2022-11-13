@@ -2,6 +2,10 @@ import io
 import json
 from pathlib import Path
 
+import jwt
+
+from constants import REQUEST as RQ
+
 
 def contents2List(contents):
     keys = []
@@ -35,3 +39,7 @@ def str2byteIO(content):
 
 def dir2path(uid, dir, file):
     return str(Path(uid) / dir / file).replace('\\', '/')
+
+
+def jwtTokenDecoder(token):
+    return jwt.decode(token, options={"verify_signature": False})
