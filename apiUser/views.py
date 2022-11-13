@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 from .s3 import *
 from .serializers import FileSerializer, ListSerializer
-from classes import Elements
+from classes import FileMeta
 from utils import elements
 
 from constants import REQUEST as RQ
@@ -20,7 +20,7 @@ class FileViewSet(viewsets.ModelViewSet):
         # file = Elements.FileMeta(request.headers, request.GET)
 
         # 데모 목적 JWT 추가
-        file = Elements.FileMeta(HEADER, request.GET)
+        file = FileMeta.FileMeta(HEADER, request.GET)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -51,7 +51,7 @@ class FileViewSet(viewsets.ModelViewSet):
         # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = Elements.FileMeta(HEADER, request.data)
+        file = FileMeta.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -71,7 +71,7 @@ class FileViewSet(viewsets.ModelViewSet):
         # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = Elements.FileMeta(HEADER, request.data)
+        file = FileMeta.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -91,7 +91,7 @@ class FileViewSet(viewsets.ModelViewSet):
         # file = Elements.FileMeta(request.headers, request.data)
 
         # 데모 목적 JWT 추가
-        file = Elements.FileMeta(HEADER, request.data)
+        file = FileMeta.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -114,8 +114,8 @@ class ListViewSet(viewsets.ModelViewSet):
 
         # 데모 목적 JWT 추가
         decoded = converter.jwtTokenDecoder(TEST_JWT)
-        inputData = {RQ.UID: elements.getUid(
-            decoded['email'], decoded['provider'])}
+        uid = elements.getUid(decoded['email'], decoded['provider'])
+        inputData = {RQ.UID: uid}
 
         listSerializer = ListSerializer(data=inputData)
 
