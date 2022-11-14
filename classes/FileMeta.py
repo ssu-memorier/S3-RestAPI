@@ -8,7 +8,8 @@ class FileMeta:
     KEY_LENGTH = 100
 
     def __init__(self, tokenData, keyDirData):
-        decoded = converter.jwtTokenDecoder(tokenData[RQ.TOKEN])
+        decoded = converter.jwtTokenDecoder(
+            tokenData[RQ.AUTORIZATION])    # ['autorization']
         email = decoded['email']
         provider = decoded['provider']
 

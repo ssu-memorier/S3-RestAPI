@@ -42,4 +42,5 @@ def dir2path(uid, dir, file):
 
 
 def jwtTokenDecoder(token):
-    return jwt.decode(token, options={"verify_signature": False})
+    parseToken = token.split()[-1]
+    return jwt.decode(parseToken, options={"verify_signature": False})
