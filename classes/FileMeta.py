@@ -9,7 +9,7 @@ class FileMeta:
 
     def __init__(self, tokenData, keyDirData):
         decoded = converter.jwtTokenDecoder(
-            tokenData[RQ.AUTORIZATION])    # ['autorization']
+            tokenData[RQ.AUTHORIZATION])    # ['authorization']
         email = decoded['email']
         provider = decoded['provider']
 

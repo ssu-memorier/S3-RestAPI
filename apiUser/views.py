@@ -94,7 +94,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
-        decoded = converter.jwtTokenDecoder(request.headers[RQ.AUTORIZATION])
+        decoded = converter.jwtTokenDecoder(request.headers[RQ.AUTHORIZATION])
         uid = elements.getUid(decoded['email'], decoded['provider'])
         inputData = {RQ.UID: uid}
 
