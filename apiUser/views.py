@@ -50,6 +50,9 @@ class FileViewSet(viewsets.ModelViewSet):
     def create(self, request):
         # file = Elements.FileMeta(request.headers, request.data)
 
+        if request.data[RQ.DATA].size > REQUEST.LIMITED_FILESIZE:
+            return Response(status.HTTP_403_FORBIDDEN, status=status.HTTP_403_FORBIDDEN)
+
         # 데모 목적 JWT 추가
         file = FileMeta.FileMeta(HEADER, request.data)
         fileSerializer = FileSerializer(data=file.data)
