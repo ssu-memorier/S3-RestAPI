@@ -3,6 +3,7 @@ UID = "uid"
 KEY = "key"
 DATA = "data"
 DIR = 'dir'
+TOKEN = 'token'
 CONTENTS = "contents"
 
 
@@ -36,3 +37,5 @@ DEFAULT_JSON = {
     },
     "highlights": []
 }
+
+DEFAULT_OBJECT_LIST = [{'Key': ""}]
