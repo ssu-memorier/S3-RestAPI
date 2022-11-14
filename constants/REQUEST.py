@@ -1,22 +1,23 @@
 # Request Key
 UID = "uid"
 KEY = "key"
-DATA = "data"
 DIR = 'dir'
+
+DATA = "data"
 TOKEN = 'token'
 CONTENTS = "contents"
-
 
 SUCCESS = True
 FAIL = False
 
-PDF = "application/pdf"
 ZIP = "application/zip"
 
 TEST_UID = 'test_id'
 
 CONTENT_DISPOSTION = 'Content-Disposition'
 CONTENT_DISPOSTION_BODY = 'attachment; filename=data.zip'
+
+LIMITED_FILESIZE = 20 * 1024 * 1024
 
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
 
