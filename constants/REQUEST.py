@@ -4,8 +4,12 @@ FAIL = False
 # Request Key
 UID = "uid"
 KEY = "key"
-DATA = "data"
 DIR = 'dir'
+
+DATA = "data"
+TOKEN = 'token'
+CONTENTS = "contents"
+
 AUTHORIZATION = 'Authorization'
 CONTENTS = "contents"
 
@@ -21,6 +25,8 @@ TEST_UID = 'test_id'
 ZIP = "application/zip"
 CONTENT_DISPOSTION = 'Content-Disposition'
 CONTENT_DISPOSTION_BODY = 'attachment; filename=data.zip'
+
+LIMITED_FILESIZE = 20 * 1024 * 1024
 
 # Http Method
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
