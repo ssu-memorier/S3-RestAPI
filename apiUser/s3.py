@@ -1,5 +1,6 @@
 from utils.client import getClientBucket
-from utils import converter, elements, check
+from utils.check import checkDuplicate
+from utils import converter, elements
 from constants import REQUEST
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
@@ -10,7 +11,7 @@ def createObject(uid, dir, key, data):
     contents = elements.getContents(listObject)
 
     try:
-        checkedKey = check.checkDuplicate(key, contents)
+        checkedKey = checkDuplicate(key, contents)
         filePath = converter.dir2path(uid, dir, checkedKey)
 
         defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
