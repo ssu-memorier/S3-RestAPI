@@ -5,18 +5,13 @@ from zipfile import ZipFile
 
 from .s3 import *
 from .serializers import FileSerializer, ListSerializer
-from classes.FileMeta import FileMeta
-from utils import elements
 
 from constants import REQUEST as RQ
 
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
-        decoded = converter.jwtTokenDecoder(jwtToken)
-        file = FileMeta(decoded, request.GET)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -43,10 +38,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
-        decoded = converter.jwtTokenDecoder(jwtToken)
-        file = FileMeta(decoded, request.data)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -62,11 +54,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
-        decoded = converter.jwtTokenDecoder(jwtToken)
-        file = FileMeta(decoded, request.data)
-        fileSerializer = FileSerializer(data=file.data)
-
+        fileSerializer = FileSerializer(data=request.fileMeta)
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
 
@@ -81,10 +69,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
-        decoded = converter.jwtTokenDecoder(jwtToken)
-        file = FileMeta(decoded, request.data)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -102,12 +87,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
-        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
-        decoded = converter.jwtTokenDecoder(jwtToken)
-        uid = elements.getUid(decoded['email'], decoded['provider'])
-        inputData = {RQ.UID: uid}
-
-        listSerializer = ListSerializer(data=inputData)
+        listSerializer = ListSerializer(data=request.fileMeta)
 
         if listSerializer.is_valid(raise_exception=True):
             uid = listSerializer.data[RQ.UID]
