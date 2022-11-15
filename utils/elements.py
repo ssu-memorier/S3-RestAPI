@@ -23,7 +23,7 @@ def getJWTToken(token):
     return token.split()[-1]    # 형태 : bearer [JWT 토큰]
 
 
-def getUserPdfFile(contents):
+def getPdfFileNames(contents):
     files = []
     for content in contents:
         if content.endswith('pdf'):
