@@ -10,19 +10,14 @@ def createObject(uid, dir, key, data):
     contents = elements.getContents(listObject)
 
     try:
-        # 해당 파일이 있는 경우 에러
-        # if f"{keyName}.pdf" in contents:
-        #     raise KeyError
         checkedKey = check.checkDuplicate(key, contents)
-
         filePath = converter.dir2path(uid, dir, checkedKey)
-        print(checkedKey)
 
-        # defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
-        # s3Client.upload_fileobj(defaultJson, s3Bucket,
-        #                         f"{filePath}.json")   # json 파일 업로드
-        # s3Client.upload_fileobj(
-        #     data, s3Bucket, f"{filePath}.pdf")   # pdf 파일 업로드
+        defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
+        s3Client.upload_fileobj(defaultJson, s3Bucket,
+                                f"{filePath}.json")   # json 파일 업로드
+        s3Client.upload_fileobj(
+            data, s3Bucket, f"{filePath}.pdf")   # pdf 파일 업로드
         return True
 
     except KeyError:
