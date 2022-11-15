@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 from .s3 import *
 from .serializers import FileSerializer, ListSerializer
-from classes import FileMeta
+from classes.FileMeta import FileMeta
 from utils import elements
 
 from constants import REQUEST as RQ
@@ -13,7 +13,9 @@ from constants import REQUEST as RQ
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-        file = FileMeta.FileMeta(request.headers, request.GET)
+        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
+        decoded = converter.jwtTokenDecoder(jwtToken)
+        file = FileMeta(decoded, request.GET)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -41,7 +43,9 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        file = FileMeta.FileMeta(request.headers, request.data)
+        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
+        decoded = converter.jwtTokenDecoder(jwtToken)
+        file = FileMeta(decoded, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -58,7 +62,9 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        file = FileMeta.FileMeta(request.headers, request.data)
+        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
+        decoded = converter.jwtTokenDecoder(jwtToken)
+        file = FileMeta(decoded, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -75,7 +81,9 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        file = FileMeta.FileMeta(request.headers, request.data)
+        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
+        decoded = converter.jwtTokenDecoder(jwtToken)
+        file = FileMeta(decoded, request.data)
         fileSerializer = FileSerializer(data=file.data)
 
         if fileSerializer.is_valid(raise_exception=True):
@@ -94,7 +102,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
-        decoded = converter.jwtTokenDecoder(request.headers[RQ.AUTHORIZATION])
+        jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
+        decoded = converter.jwtTokenDecoder(jwtToken)
         uid = elements.getUid(decoded['email'], decoded['provider'])
         inputData = {RQ.UID: uid}
 
