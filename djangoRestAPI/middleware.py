@@ -19,8 +19,9 @@ class LogInMiddleware:
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
             return HttpResponseForbidden(status.HTTP_402_PAYMENT_REQUIRED)
-        request.META['uid'] = elements.getUid(
-            decoded['email'], decoded['provider'])
+        if not hasattr(request, 'uid'):
+            request.uid = elements.getUid(
+                decoded['email'], decoded['provider'])
         response = self.get_response(request)
 
         return response
@@ -33,7 +34,7 @@ class SerializerMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        uid = request.META['uid']
+        uid = request.uid
 
         if request.path == '/list':
             myRequest = {'uid': uid}
