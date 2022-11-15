@@ -21,3 +21,14 @@ def getContents(listObject):
 
 def getJWTToken(token):
     return token.split()[-1]    # 형태 : bearer [JWT 토큰]
+
+
+def getUserPdfFile(contents):
+    files = []
+    for content in contents:
+        if content.endswith('pdf'):
+            tokens = content.split('/')
+            fileName = tokens[-1][:-4]       # 파일 확장자 부분 잘라내기
+            files.append(fileName)
+
+    return sorted(files)
