@@ -51,7 +51,7 @@ class FileViewSet(viewsets.ModelViewSet):
         # file = Elements.FileMeta(request.headers, request.data)
 
         if request.data[RQ.DATA].size > REQUEST.LIMITED_FILESIZE:
-            return Response(status.HTTP_403_FORBIDDEN, status=status.HTTP_403_FORBIDDEN)
+            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
         # 데모 목적 JWT 추가
         file = FileMeta.FileMeta(HEADER, request.data)
