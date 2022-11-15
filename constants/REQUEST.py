@@ -3,7 +3,7 @@ UID = "uid"
 KEY = "key"
 DATA = "data"
 DIR = 'dir'
-AUTHORIZATION = 'authorization'
+AUTHORIZATION = 'Authorization'
 CONTENTS = "contents"
 
 
