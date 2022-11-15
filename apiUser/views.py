@@ -5,23 +5,13 @@ from zipfile import ZipFile
 
 from .s3 import *
 from .serializers import FileSerializer, ListSerializer
-from classes import FileMeta
-from utils import elements
 
 from constants import REQUEST as RQ
-
-# 임시 JWT 토큰
-TEST_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlkdzUyMTBAbmF2ZXIuY29tIiwicHJvdmlkZXIiOiJrYWthbyIsInJlZnJlc2hUb2tlbiI6ImJ4VjlndExpUFFrSWxxUzV2RGNCTXBsQ3NxRDdxMXpoRXdXWWNXZ1ZDajEwYUFBQUFZUllFSjhzIiwiaWF0IjoxNjY4MDkxMjE5fQ.M8-32Z80kShpmlaDQeoOyN0G_8UtSYV7QbDHR2Ew-WU%22%7D'
-HEADER = {RQ.TOKEN: TEST_JWT}
 
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-        # file = Elements.FileMeta(request.headers, request.GET)
-
-        # 데모 목적 JWT 추가
-        file = FileMeta.FileMeta(HEADER, request.GET)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -48,11 +38,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        # file = Elements.FileMeta(request.headers, request.data)
-
-        # 데모 목적 JWT 추가
-        file = FileMeta.FileMeta(HEADER, request.data)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -68,12 +54,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        # file = Elements.FileMeta(request.headers, request.data)
-
-        # 데모 목적 JWT 추가
-        file = FileMeta.FileMeta(HEADER, request.data)
-        fileSerializer = FileSerializer(data=file.data)
-
+        fileSerializer = FileSerializer(data=request.fileMeta)
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
 
@@ -88,11 +69,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        # file = Elements.FileMeta(request.headers, request.data)
-
-        # 데모 목적 JWT 추가
-        file = FileMeta.FileMeta(HEADER, request.data)
-        fileSerializer = FileSerializer(data=file.data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
@@ -110,14 +87,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
 class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
-        # inputData = {RQ.UID: elements.getUid(request.headers[RQ.TOKEN])}
-
-        # 데모 목적 JWT 추가
-        decoded = converter.jwtTokenDecoder(TEST_JWT)
-        uid = elements.getUid(decoded['email'], decoded['provider'])
-        inputData = {RQ.UID: uid}
-
-        listSerializer = ListSerializer(data=inputData)
+        listSerializer = ListSerializer(data=request.fileMeta)
 
         if listSerializer.is_valid(raise_exception=True):
             uid = listSerializer.data[RQ.UID]
