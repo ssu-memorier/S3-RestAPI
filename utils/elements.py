@@ -17,3 +17,7 @@ def getListObject(s3Client, s3Bucket, uid):  # 해당 userID를 가진 컨텐츠
 
 def getContents(listObject):
     return [data['Key'] for data in listObject]
+
+
+def getJWTToken(token):
+    return token.split()[-1]    # 형태 : bearer [JWT 토큰]
