@@ -18,7 +18,7 @@ class LogInMiddleware:
         jwtToken = elements.getJWTToken(request.headers[RQ.AUTHORIZATION])
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
-            return HttpResponseForbidden(status.HTTP_402_PAYMENT_REQUIRED)
+            return HttpResponseForbidden(status.HTTP_401_UNAUTHORIZED)
         if not hasattr(request, 'uid'):
             request.uid = elements.getUid(
                 decoded['email'], decoded['provider'])
