@@ -4,8 +4,6 @@ from pathlib import Path
 
 import jwt
 
-from constants import REQUEST as RQ
-
 
 def contents2List(contents):
     keys = []
@@ -42,5 +40,4 @@ def dir2path(uid, dir, file):
 
 
 def jwtTokenDecoder(token):
-    parseToken = token.split()[-1]
-    return jwt.decode(parseToken, options={"verify_signature": False})
+    return jwt.decode(token, options={"verify_signature": False})
