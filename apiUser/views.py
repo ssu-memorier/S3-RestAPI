@@ -57,8 +57,7 @@ class FileViewSet(viewsets.ModelViewSet):
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
 
-            filePath = converter.dir2path(uid, dir, key)
-            isCreated = createObject(uid, filePath, request.data[RQ.DATA])
+            isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
