@@ -19,10 +19,6 @@ def getContents(listObject):
     return [data['Key'] for data in listObject]
 
 
-def getJWTToken(token):
-    return token.split()[-1]    # 형태 : bearer [JWT 토큰]
-
-
 def getPdfFileNames(contents):
     files = []
     for content in contents:
