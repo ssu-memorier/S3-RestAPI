@@ -8,7 +8,7 @@ DIR = 'dir'
 DATA = "data"
 TOKEN = 'token'
 
-COOKIES_TOKEN = 'Cookie_5'
+COOKIES_TOKEN = 'jwt'
 
 AUTHORIZATION = 'Authorization'
 CONTENTS = "contents"
