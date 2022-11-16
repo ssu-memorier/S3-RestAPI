@@ -6,7 +6,9 @@ UID = "uid"
 KEY = "key"
 DATA = "data"
 DIR = 'dir'
-AUTHORIZATION = 'Authorization'
+TOKEN = 'token'
+
+COOKIES_TOKEN = 'Cookie_5'
 CONTENTS = "contents"
 
 # User Schema Max Length
