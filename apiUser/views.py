@@ -38,13 +38,15 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
+        if request.data[RQ.DATA].size > REQUEST.LIMITED_FILESIZE:
+            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+
         fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
             uid, dir, key = fileSerializer.elements
 
-            filePath = converter.dir2path(uid, dir, key)
-            isCreated = createObject(uid, filePath, request.data[RQ.DATA])
+            isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)

@@ -4,11 +4,13 @@ FAIL = False
 # Request Key
 UID = "uid"
 KEY = "key"
-DATA = "data"
 DIR = 'dir'
+DATA = "data"
 TOKEN = 'token'
 
 COOKIES_TOKEN = 'Cookie_5'
+
+AUTHORIZATION = 'Authorization'
 CONTENTS = "contents"
 
 # User Schema Max Length
@@ -23,6 +25,8 @@ TEST_UID = 'test_id'
 ZIP = "application/zip"
 CONTENT_DISPOSTION = 'Content-Disposition'
 CONTENT_DISPOSTION_BODY = 'attachment; filename=data.zip'
+
+LIMITED_FILESIZE = 20 * 1024 * 1024
 
 # Http Method
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
