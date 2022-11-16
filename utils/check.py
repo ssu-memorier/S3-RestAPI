@@ -1,9 +1,9 @@
 import re
-from utils.elements import getUserPdfFile
+from utils.elements import getPdfFileNames
 
 
 def checkDuplicate(key, contents):
-    files = getUserPdfFile(contents)
+    files = getPdfFileNames(contents)
 
     mainpattern = re.compile(f'{key}')      # 같은 파일을 찾는 용도
     subPattern = re.compile(f'^{key} \((\d)\)$')    # 중복되는 파일을 찾는 용도
