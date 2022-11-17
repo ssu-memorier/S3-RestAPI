@@ -15,6 +15,7 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        print(request.__dict__)
         print(request.COOKIES)
         loaded = json.loads(request.COOKIES[RQ.COOKIES_TOKEN])
         jwtToken = loaded[RQ.TOKEN]
