@@ -1,24 +1,24 @@
 from utils.client import getClientBucket
-from utils import converter
-from constants import REQUEST
+from utils.check import checkDuplicate
+from utils import converter, elements
+from constants import S3
 
 s3Client, s3Bucket = getClientBucket()      # 서버 클라이언트, 버킷 정보
 
 
-def createObject(uid, keyName, data):
-    contents = [data['Key'] for data in getListObject(uid)]
+def createObject(uid, dir, key, data):
+    listObject = elements.getListObject(s3Client, s3Bucket, uid)
+    contents = elements.getContents(listObject)
 
     try:
-        # 해당 파일이 있는 경우 에러
-        if f"{keyName}.pdf" in contents:
-            raise KeyError
+        checkedKey = checkDuplicate(key, contents)
+        filePath = converter.dir2path(uid, dir, checkedKey)
 
-        defaultJson = converter.str2byteIO(REQUEST.DEFAULT_JSON)
+        defaultJson = converter.str2byteIO(S3.DEFAULT_JSON)
         s3Client.upload_fileobj(defaultJson, s3Bucket,
-                                f"{keyName}.json")   # json 파일 업로드
+                                f"{filePath}.json")   # json 파일 업로드
         s3Client.upload_fileobj(
-            data, s3Bucket, f"{keyName}.pdf")   # pdf 파일 업로드
-
+            data, s3Bucket, f"{filePath}.pdf")   # pdf 파일 업로드
         return True
 
     except KeyError:
@@ -26,7 +26,8 @@ def createObject(uid, keyName, data):
 
 
 def getObject(uid, keyName):
-    contents = [data['Key'] for data in getListObject(uid)]
+    listObject = elements.getListObject(s3Client, s3Bucket, uid)
+    contents = elements.getContents(listObject)
 
     try:
         # 해당 파일이 없는 경우 에러
@@ -45,7 +46,8 @@ def getObject(uid, keyName):
 
 
 def deleteObject(uid, keyName):
-    contents = [data['Key'] for data in getListObject(uid)]
+    listObject = elements.getListObject(s3Client, s3Bucket, uid)
+    contents = elements.getContents(listObject)
 
     try:
         # 해당 파일이 없는 경우 에러
@@ -73,12 +75,8 @@ def saveJson(keyName, data):
 
 def getList(uid):
     try:
-        contents = getListObject(uid)
-        return converter.convertContents(contents)
+        contents = elements.getListObject(s3Client, s3Bucket, uid)
+        return converter.contents2List(contents)
 
     except KeyError:        # 유저 정보가 없으면 에러 발생
         return None
-
-
-def getListObject(uid):  # 해당 userID를 가진 컨텐츠만 가져옴
-    return s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)['Contents']

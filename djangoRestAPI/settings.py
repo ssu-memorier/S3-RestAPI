@@ -21,6 +21,7 @@ load_dotenv()   # load .env
 BASE_DIR = Path(__file__).resolve().parent.parent
 key = os.environ.get(KEY.DJANGOKEY)
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -55,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'djangoRestAPI.middleware.LogInMiddleware',
+    'djangoRestAPI.middleware.SerializerMiddleware',
     'corsheaders.middleware.CorsMiddleware',     # CORS 관련 추가
 ]
 
@@ -131,11 +134,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
+USE_TZ = True
 
 USE_I18N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

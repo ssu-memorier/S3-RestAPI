@@ -1,38 +1,17 @@
-# Request Key
-UID = "uid"
-KEY = "key"
-DATA = "data"
-DIR = 'dir'
-CONTENTS = "contents"
-
-
 SUCCESS = True
 FAIL = False
 
-PDF = "application/pdf"
-ZIP = "application/zip"
+# Request Key
+UID = "uid"
+KEY = "key"
+DIR = 'dir'
+DATA = "data"
+TOKEN = 'token'
 
+COOKIES_TOKEN = 'jwt'
+
+# 임시 UID
 TEST_UID = 'test_id'
 
-CONTENT_DISPOSTION = 'Content-Disposition'
-CONTENT_DISPOSTION_BODY = 'attachment; filename=data.zip'
-
+# Http Method
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
-
-DEFAULT_JSON = {
-    "editor": {
-        "time": 0,
-        "blocks": [
-            {
-                "id": '3W6kMa4BtB',
-                "type": 'header',
-                "data": {
-                    "text": '',
-                    "level": 2
-                },
-            },
-        ],
-        "version": '2.25.0',
-    },
-    "highlights": []
-}

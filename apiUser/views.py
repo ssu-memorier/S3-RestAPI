@@ -7,21 +7,16 @@ from .s3 import *
 from .serializers import FileSerializer, ListSerializer
 
 from constants import REQUEST as RQ
+from constants import RESPONSE as RP
+from constants import FILEMETA
 
 
 class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
-
-        input_data = {RQ.UID: RQ.TEST_UID}
-        input_data[RQ.KEY] = request.GET[RQ.KEY]
-        input_data[RQ.DIR] = request.GET[RQ.DIR]
-
-        fileSerializer = FileSerializer(data=input_data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid = fileSerializer.data[RQ.UID]
-            dir = fileSerializer.data[RQ.DIR]
-            key = fileSerializer.data[RQ.KEY]
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             pdfContent, jsonContent = getObject(uid, filePath)
@@ -31,8 +26,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
             # set response
             response = HttpResponse(
-                content_type=RQ.ZIP, status=status.HTTP_200_OK)
-            response[RQ.CONTENT_DISPOSTION] = RQ.CONTENT_DISPOSTION_BODY
+                content_type=RP.ZIP, status=status.HTTP_200_OK)
+            response[RP.CONTENT_DISPOISTION] = RP.CONTENT_DISPOISTION_BODY
 
             # add zipFile and datas
             zipObj = ZipFile(response, 'w')
@@ -45,36 +40,27 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        request.data[RQ.UID] = RQ.TEST_UID
-        fileSerializer = FileSerializer(data=request.data)
+        if request.data[RQ.DATA].size > FILEMETA.LIMITED_FILESIZE:
+            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid = fileSerializer.data[RQ.UID]
-            dir = fileSerializer.data[RQ.DIR]
-            key = fileSerializer.data[RQ.KEY]
+            uid, dir, key = fileSerializer.elements
 
-            filePath = converter.dir2path(uid, dir, key)
-            isCreated = createObject(uid, filePath, request.data[RQ.DATA])
+            isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
             return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
-
         else:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
-        input_data = {RQ.UID: RQ.TEST_UID}
-        input_data[RQ.KEY] = request.data[RQ.KEY]
-        input_data[RQ.DIR] = request.data[RQ.DIR]
-
-        fileSerializer = FileSerializer(data=input_data)
-
+        fileSerializer = FileSerializer(data=request.fileMeta)
         if fileSerializer.is_valid(raise_exception=True):
-            uid = fileSerializer.data[RQ.UID]
-            dir = fileSerializer.data[RQ.DIR]
-            key = fileSerializer.data[RQ.KEY]
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             isDeleted = deleteObject(uid, filePath)
@@ -87,16 +73,10 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
-        input_data = {RQ.UID: RQ.TEST_UID}
-        input_data[RQ.KEY] = request.data[RQ.KEY]
-        input_data[RQ.DIR] = request.data[RQ.DIR]
-
-        fileSerializer = FileSerializer(data=input_data)
+        fileSerializer = FileSerializer(data=request.fileMeta)
 
         if fileSerializer.is_valid(raise_exception=True):
-            uid = fileSerializer.data[RQ.UID]
-            dir = fileSerializer.data[RQ.DIR]
-            key = fileSerializer.data[RQ.KEY]
+            uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
@@ -110,9 +90,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
 
 class ListViewSet(viewsets.ModelViewSet):
-    def list(self, _):
-
-        listSerializer = ListSerializer(data={RQ.UID: RQ.TEST_UID})
+    def list(self, request):
+        listSerializer = ListSerializer(data=request.fileMeta)
 
         if listSerializer.is_valid(raise_exception=True):
             uid = listSerializer.data[RQ.UID]
@@ -121,11 +100,7 @@ class ListViewSet(viewsets.ModelViewSet):
             if contents is None:       # Content가 없으면
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
-            return JsonResponse({RQ.UID: RQ.TEST_UID, RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
+            return JsonResponse({RP.UID: uid, RP.CONTENTS: contents}, status=status.HTTP_200_OK)
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
-
-
-def requestValidCheck(serializer, data):    # request가 valid한지 check
-    return serializer(data=data).is_valid()

@@ -1,0 +1,8 @@
+
+
+# User Schema Max Length
+UID_LENGTH = 64
+DIR_LENGTH = 200
+KEY_LENGTH = 100
+
+LIMITED_FILESIZE = 20 * 1024 * 1024
