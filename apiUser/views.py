@@ -27,7 +27,7 @@ class FileViewSet(viewsets.ModelViewSet):
             # set response
             response = HttpResponse(
                 content_type=RP.ZIP, status=status.HTTP_200_OK)
-            response[RP.CONTENT_DISPOSTION] = RP.CONTENT_DISPOSTION_BODY
+            response[RP.CONTENT_DISPOISTION] = RP.CONTENT_DISPOISTION_BODY
 
             # add zipFile and datas
             zipObj = ZipFile(response, 'w')
