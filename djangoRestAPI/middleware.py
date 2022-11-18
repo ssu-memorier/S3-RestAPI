@@ -15,12 +15,12 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        print(request.headers)
-        print(request.__dict__)
-        print(request.COOKIES)
+        print('a ///', '\t', request.headers)
+        print('b ///', '\t', request.__dict__)
+        print('c ///', '\t', request.COOKIES)
         # loaded = json.loads(request.COOKIES[RQ.COOKIES_TOKEN])
         # jwtToken = loaded[RQ.TOKEN]
-        
+
         jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
@@ -44,30 +44,23 @@ class SerializerMiddleware:
 
         if request.path == '/list':
             myRequest = {'uid': uid}
-            if not hasattr(request, 'fileMeta'):
-                request.fileMeta = myRequest
-            response = self.get_response(request)
 
         else:
             if request.method == 'GET':
                 myRequest = request.GET.copy()
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
 
             elif request.method == "POST":
+                print(">>>>>>", request.POST)
                 myRequest = request.POST.copy()
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
 
             elif request.method == 'DELETE' or request.method == 'PUT':
                 myRequest = json.loads(request.body)
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
+
+            if not hasattr(request, 'fileMeta'):
+                request.fileMeta = myRequest
+            response = self.get_response(request)
 
         return response
