@@ -40,6 +40,8 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
+        print(">>>>>>>>>\t", 1, request.data)
+        print(">>>>>>>>>\t", 2, request.POST)
         if request.data[RQ.DATA].size > FILEMETA.LIMITED_FILESIZE:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
