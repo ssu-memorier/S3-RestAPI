@@ -1,4 +1,4 @@
-from constants import REQUEST as RQ
+from constants import S3
 
 import hashlib
 
@@ -12,15 +12,11 @@ def getListObject(s3Client, s3Bucket, uid):  # 해당 userID를 가진 컨텐츠
     try:
         return s3Client.list_objects_v2(Bucket=s3Bucket, Prefix=uid)['Contents']
     except KeyError:
-        return RQ.DEFAULT_OBJECT_LIST
+        return S3.DEFAULT_OBJECT_LIST
 
 
 def getContents(listObject):
     return [data['Key'] for data in listObject]
-
-
-def getJWTToken(token):
-    return token.split()[-1]    # 형태 : bearer [JWT 토큰]
 
 
 def getPdfFileNames(contents):

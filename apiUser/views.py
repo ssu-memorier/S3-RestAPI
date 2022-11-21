@@ -7,6 +7,8 @@ from .s3 import *
 from .serializers import FileSerializer, ListSerializer
 
 from constants import REQUEST as RQ
+from constants import RESPONSE as RP
+from constants import FILEMETA
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -24,8 +26,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
             # set response
             response = HttpResponse(
-                content_type=RQ.ZIP, status=status.HTTP_200_OK)
-            response[RQ.CONTENT_DISPOSTION] = RQ.CONTENT_DISPOSTION_BODY
+                content_type=RP.ZIP, status=status.HTTP_200_OK)
+            response[RP.CONTENT_DISPOISTION] = RP.CONTENT_DISPOISTION_BODY
 
             # add zipFile and datas
             zipObj = ZipFile(response, 'w')
@@ -38,7 +40,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        if request.data[RQ.DATA].size > REQUEST.LIMITED_FILESIZE:
+        if request.data[RQ.DATA].size > FILEMETA.LIMITED_FILESIZE:
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
         fileSerializer = FileSerializer(data=request.fileMeta)
@@ -98,7 +100,7 @@ class ListViewSet(viewsets.ModelViewSet):
             if contents is None:       # Content가 없으면
                 return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
 
-            return JsonResponse({RQ.UID: uid, RQ.CONTENTS: contents}, status=status.HTTP_200_OK)
+            return JsonResponse({RP.UID: uid, RP.CONTENTS: contents}, status=status.HTTP_200_OK)
         else:
 
             return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)

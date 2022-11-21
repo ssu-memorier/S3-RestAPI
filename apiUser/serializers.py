@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from constants import REQUEST
+from constants import FILEMETA
 
 '''
     django REST framework에서 제공하는 serializer를 활용하여
@@ -9,10 +9,10 @@ from constants import REQUEST
 
 
 class FileSerializer(serializers.Serializer):       # file object
-    uid = serializers.CharField(max_length=REQUEST.UID_LENGTH)
+    uid = serializers.CharField(max_length=FILEMETA.UID_LENGTH)
     dir = serializers.CharField(
-        max_length=REQUEST.DIR_LENGTH, allow_blank=True)
-    key = serializers.CharField(max_length=REQUEST.KEY_LENGTH)
+        max_length=FILEMETA.DIR_LENGTH, allow_blank=True)
+    key = serializers.CharField(max_length=FILEMETA.KEY_LENGTH)
 
     @property
     def elements(self):
@@ -20,4 +20,4 @@ class FileSerializer(serializers.Serializer):       # file object
 
 
 class ListSerializer(serializers.Serializer):       # list object
-    uid = serializers.CharField(max_length=REQUEST.UID_LENGTH)
+    uid = serializers.CharField(max_length=FILEMETA.UID_LENGTH)
