@@ -51,9 +51,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
-                return Response(MESSAGE.IS_NOT_CREATED, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.FILE_IS_NOT_CREATED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.IS_CREATED, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.FILE_IS_CREATED, status=status.HTTP_201_CREATED)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
@@ -66,9 +66,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isDeleted = deleteObject(uid, filePath)
 
             if not isDeleted:   # 삭제가 되지 않은 경우
-                return Response(MESSAGE.IS_NOT_DELETED, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.FILE_IS_NOT_DELETED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.IS_DELETED, status=status.HTTP_200_OK)
+            return Response(MESSAGE.FILE_IS_DELETED, status=status.HTTP_200_OK)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,9 +82,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
 
             if not isUpdated:   # 생성이 되지 않은 경우
-                return Response(MESSAGE.IS_NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.FILE_IS_NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.IS_SAVE, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.FILE_IS_SAVE, status=status.HTTP_201_CREATED)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
