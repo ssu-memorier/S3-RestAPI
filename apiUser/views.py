@@ -82,9 +82,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
 
             if not isUpdated:   # 생성이 되지 않은 경우
-                return Response(MESSAGE.FILE_IS_NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.FILE_IS_NOT_SAVED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.FILE_IS_SAVE, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.FILE_IS_SAVED, status=status.HTTP_201_CREATED)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
