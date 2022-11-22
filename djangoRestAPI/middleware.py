@@ -15,8 +15,7 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        loaded = json.loads(request.COOKIES[RQ.COOKIES_TOKEN])
-        jwtToken = loaded[RQ.TOKEN]
+        jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
             return HttpResponseForbidden(status.HTTP_401_UNAUTHORIZED)
