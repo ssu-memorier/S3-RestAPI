@@ -8,7 +8,7 @@ from .serializers import FileSerializer, ListSerializer
 
 from constants import REQUEST as RQ
 from constants import RESPONSE as RP
-from constants import FILEMETA
+from constants import FILEMETA, MESSAGE
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -22,7 +22,7 @@ class FileViewSet(viewsets.ModelViewSet):
             pdfContent, jsonContent = getObject(uid, filePath)
 
             if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.NO_FILE_EXISTENCE, status=status.HTTP_404_NOT_FOUND)
 
             # set response
             response = HttpResponse(
@@ -37,15 +37,11 @@ class FileViewSet(viewsets.ModelViewSet):
             return response
 
         else:
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def create(self, request):
-        print(">>>>>>>>>\t", 0, str(request.fileMeta))
-        print(">>>>>>>>>\t", 1, str(request.data))
-        print(">>>>>>>>>\t", 2, str(request.POST))
-        print(">>>>>>>>>\t", 3, dict(request.data).values())
         if request.data[RQ.DATA].size > FILEMETA.LIMITED_FILESIZE:
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.FILE_SIZE_EXCESS, status=status.HTTP_400_BAD_REQUEST)
 
         fileSerializer = FileSerializer(data=request.fileMeta)
 
@@ -55,11 +51,11 @@ class FileViewSet(viewsets.ModelViewSet):
             isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.NOT_CREATED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.SUCCESS_CREATED, status=status.HTTP_201_CREATED)
         else:
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
@@ -70,11 +66,11 @@ class FileViewSet(viewsets.ModelViewSet):
             isDeleted = deleteObject(uid, filePath)
 
             if not isDeleted:   # 삭제가 되지 않은 경우
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.NOT_DELETED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(status.HTTP_200_OK, status=status.HTTP_200_OK)
+            return Response(MESSAGE.SUCCESS_DELETED, status=status.HTTP_200_OK)
         else:
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
@@ -86,11 +82,11 @@ class FileViewSet(viewsets.ModelViewSet):
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
 
             if not isUpdated:   # 생성이 되지 않은 경우
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(status.HTTP_201_CREATED, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.SUCCESS_SAVE, status=status.HTTP_201_CREATED)
         else:
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListViewSet(viewsets.ModelViewSet):
@@ -102,9 +98,9 @@ class ListViewSet(viewsets.ModelViewSet):
             contents = getList(uid)
 
             if contents is None:       # Content가 없으면
-                return Response(status.HTTP_404_NOT_FOUND, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.NO_USER_INFO, status=status.HTTP_404_NOT_FOUND)
 
             return JsonResponse({RP.UID: uid, RP.CONTENTS: contents}, status=status.HTTP_200_OK)
         else:
 
-            return Response(status.HTTP_400_BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
