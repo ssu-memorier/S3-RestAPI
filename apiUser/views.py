@@ -51,9 +51,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
 
             if not isCreated:   # 생성이 되지 않은 경우
-                return Response(MESSAGE.NOT_CREATED, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.IS_NOT_CREATED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.SUCCESS_CREATED, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.IS_CREATED, status=status.HTTP_201_CREATED)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
@@ -66,9 +66,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isDeleted = deleteObject(uid, filePath)
 
             if not isDeleted:   # 삭제가 되지 않은 경우
-                return Response(MESSAGE.NOT_DELETED, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.IS_NOT_DELETED, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.SUCCESS_DELETED, status=status.HTTP_200_OK)
+            return Response(MESSAGE.IS_DELETED, status=status.HTTP_200_OK)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,9 +82,9 @@ class FileViewSet(viewsets.ModelViewSet):
             isUpdated = saveJson(filePath, request.data[RQ.DATA])
 
             if not isUpdated:   # 생성이 되지 않은 경우
-                return Response(MESSAGE.NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.IS_NOT_SAVE, status=status.HTTP_404_NOT_FOUND)
 
-            return Response(MESSAGE.SUCCESS_SAVE, status=status.HTTP_201_CREATED)
+            return Response(MESSAGE.IS_SAVE, status=status.HTTP_201_CREATED)
         else:
             return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
 
@@ -98,7 +98,7 @@ class ListViewSet(viewsets.ModelViewSet):
             contents = getList(uid)
 
             if contents is None:       # Content가 없으면
-                return Response(MESSAGE.NO_USER_INFO, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.USER_INFO_NOT_EXIST, status=status.HTTP_404_NOT_FOUND)
 
             return JsonResponse({RP.UID: uid, RP.CONTENTS: contents}, status=status.HTTP_200_OK)
         else:
