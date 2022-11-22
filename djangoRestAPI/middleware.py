@@ -38,30 +38,22 @@ class SerializerMiddleware:
 
         if request.path == '/list':
             myRequest = {'uid': uid}
-            if not hasattr(request, 'fileMeta'):
-                request.fileMeta = myRequest
-            response = self.get_response(request)
 
         else:
             if request.method == 'GET':
                 myRequest = request.GET.copy()
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
 
             elif request.method == "POST":
                 myRequest = request.POST.copy()
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
 
             elif request.method == 'DELETE' or request.method == 'PUT':
                 myRequest = json.loads(request.body)
                 myRequest['uid'] = uid
-                if not hasattr(request, 'fileMeta'):
-                    request.fileMeta = myRequest
-                response = self.get_response(request)
+
+        if not hasattr(request, 'fileMeta'):
+            request.fileMeta = myRequest
+        response = self.get_response(request)
 
         return response
