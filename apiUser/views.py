@@ -22,7 +22,7 @@ class FileViewSet(viewsets.ModelViewSet):
             pdfContent, jsonContent = getObject(uid, filePath)
 
             if pdfContent is None or jsonContent is None:     # 가져온 파일이 없는경우
-                return Response(MESSAGE.NO_FILE_EXISTENCE, status=status.HTTP_404_NOT_FOUND)
+                return Response(MESSAGE.FILE_NOT_EXIST, status=status.HTTP_404_NOT_FOUND)
 
             # set response
             response = HttpResponse(
