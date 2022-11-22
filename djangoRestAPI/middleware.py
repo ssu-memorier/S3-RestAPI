@@ -15,13 +15,6 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        print('q', '\t', request.FILES, '\n\n\n')
-        print('a ///', '\t', request.headers, '\n\n\n')
-        print('b ///', '\t', request.__dict__, '\n\n\n')
-        print('c ///', '\t', request.COOKIES, '\n\n\n')
-        # loaded = json.loads(request.COOKIES[RQ.COOKIES_TOKEN])
-        # jwtToken = loaded[RQ.TOKEN]
-
         jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
@@ -60,8 +53,8 @@ class SerializerMiddleware:
                 myRequest = json.loads(request.body)
                 myRequest['uid'] = uid
 
-            if not hasattr(request, 'fileMeta'):
-                request.fileMeta = myRequest
-            response = self.get_response(request)
+        if not hasattr(request, 'fileMeta'):
+            request.fileMeta = myRequest
+        response = self.get_response(request)
 
         return response
