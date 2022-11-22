@@ -45,7 +45,6 @@ class SerializerMiddleware:
                 myRequest['uid'] = uid
 
             elif request.method == "POST":
-                print(">>>>>>", request.POST)
                 myRequest = request.POST.copy()
                 myRequest['uid'] = uid
 
