@@ -1,12 +1,17 @@
 from utils.elements import getPdfFileNames
 import re
+specialRegex = {"{": "\{", "}": "\}", "[": "\[", "]": "\]",
+                "/": "\/", ")": "\)", "=": "\=", "(": "\(", "'": "\'", '"': '\"'}
 
 
 def checkDuplicate(key, contents):
     files = getPdfFileNames(contents)
+    fileName = key
 
-    mainpattern = re.compile(f'{key}')      # 같은 파일을 찾는 용도
-    subPattern = re.compile(f'^{key} \((\d)\)$')    # 중복되는 파일을 찾는 용도
+    for k, v in specialRegex.items():
+        fileName = fileName.replace(k, v)
+    mainpattern = re.compile(f'{fileName}')      # 같은 파일을 찾는 용도
+    subPattern = re.compile(f'{fileName} \((\d)\)$')    # 중복되는 파일을 찾는 용도
 
     files.sort()
     duplicatedFileList = []   # 같은 이름을 갖고 있는 파일 리스트
