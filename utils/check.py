@@ -1,14 +1,14 @@
 from utils.elements import getPdfFileNames
 import re
-specialRegex = {"{": "\{", "}": "\}", "[": "\[", "]": "\]",
-                "/": "\/", ")": "\)", "=": "\=", "(": "\(", "'": "\'", '"': '\"'}
+
+from constants import S3
 
 
 def checkDuplicate(key, contents):
     files = getPdfFileNames(contents)
     fileName = key
 
-    for k, v in specialRegex.items():
+    for k, v in S3.SPECIAL_REGEX.items():
         fileName = fileName.replace(k, v)
     mainpattern = re.compile(f'{fileName}')      # 같은 파일을 찾는 용도
     subPattern = re.compile(f'{fileName} \((\d)\)$')    # 중복되는 파일을 찾는 용도
