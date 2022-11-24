@@ -17,4 +17,4 @@ TEST_UID = 'test_id'
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
 
 # AUTH URL
-AUTH_URL = "https://gomgukauthserver.paas-ta.org/auth/valid-token"
+AUTH_SUB_URL = "auth/valid-token"
