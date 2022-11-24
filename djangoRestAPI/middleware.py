@@ -30,7 +30,7 @@ class LogInMiddleware:
 
         # Request에서 쿠키를 받아 다시 재가공한 뒤 AUTH 서버에 유효성 검사를 진행
         params = {'jwt': jwtToken}
-        url = urljoin(authUrl, RQ.AUTH_SUB_URL)
+        url = urljoin(authUrl, RQ.AUTH_VALIDTOKEN_URL)
         response = requests.get(url, params=params)  # 요청 전송
 
         # 잘못된 요청 진행
