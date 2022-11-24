@@ -24,11 +24,13 @@ jobs:
           echo "AwsAccessKeyId=$AWSACCESSKEYID" >> .env
           echo "AwsSecretAccessKey=$AWSSECRETACCESSKEY" >> .env
           echo "AwsStorageBucketName=$AWSSTORAGEBUCKET" >> .env
+          echo "AuthUrl=$AUTH_URL" >> .env
         env:
           DJANGO_KEY: ${{ secrets.DJANGO_KEY }}
           AWSACCESSKEYID: ${{ secrets.AWS_ACCESSKEYID }}
           AWSSECRETACCESSKEY: ${{ secrets.AWS_SECRETACCESSKEY }}
           AWSSTORAGEBUCKET: ${{ secrets.AWS_STORAGEBUCKET }}
+          AUTH_URL: ${{ secrets.AUTH_URL }}
 
       - name: CloudFoundry push application with different directory
         uses: jiwonii97/cf-push@main
