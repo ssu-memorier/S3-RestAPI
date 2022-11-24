@@ -4,10 +4,19 @@ from django.http import HttpResponseForbidden
 from rest_framework import status
 
 import json
+import os
 import requests
+from dotenv import load_dotenv
+from urllib.parse import urljoin
+
+from constants import KEY
 """
     Rest Framework 을 위한 전용 커스텀 미들웨어에 대해 response format 을 자동으로 세팅
 """
+
+
+load_dotenv()   # load .env
+authURL = os.environ.get(KEY.AUTH_URL)
 
 
 class LogInMiddleware:
@@ -21,7 +30,8 @@ class LogInMiddleware:
 
         # Request에서 쿠키를 받아 다시 재가공한 뒤 AUTH 서버에 유효성 검사를 진행
         params = {'jwt': jwtToken}
-        response = requests.get(RQ.AUTH_URL, params=params)  # 요청 전송
+        url = urljoin(authURL, RQ.AUTH_SUB_URL)
+        response = requests.get(url, params=params)  # 요청 전송
 
         # 잘못된 요청 진행
         if response.status_code == 401:
