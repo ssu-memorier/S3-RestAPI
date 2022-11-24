@@ -15,3 +15,6 @@ TEST_UID = 'test_id'
 
 # Http Method
 GET, POST, PUT, DELETE = "GET", "POST", "PUT", "DELETE"
+
+# AUTH URL
+AUTH_VALIDTOKEN_URL = "auth/valid-token"
