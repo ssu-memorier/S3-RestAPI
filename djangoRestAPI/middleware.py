@@ -26,6 +26,8 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # TO DO : 쿠키가 잘못 들어올것을 대비해서 400 에러로 전달하는 try-except
+        print(request.__dict__)
         jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
 
         # Request에서 쿠키를 받아 다시 재가공한 뒤 AUTH 서버에 유효성 검사를 진행
