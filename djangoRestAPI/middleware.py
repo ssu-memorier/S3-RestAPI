@@ -1,7 +1,8 @@
 from utils import elements, converter
 from constants import REQUEST as RQ
-from django.http import HttpResponseForbidden
+from constants import RESPONSE as RP
 from rest_framework import status
+from django.http import HttpResponse
 
 import json
 import os
@@ -26,23 +27,22 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # TO DO : 쿠키가 잘못 들어올것을 대비해서 400 에러로 전달하는 try-except
-        print(request.__dict__)
         jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
 
         # Request에서 쿠키를 받아 다시 재가공한 뒤 AUTH 서버에 유효성 검사를 진행
         params = {'jwt': jwtToken}
         url = urljoin(authUrl, RQ.AUTH_VALIDTOKEN_URL)
         response = requests.get(url, params=params)  # 요청 전송
+        contents = json.loads(response.text)
 
         # 잘못된 요청 진행
         if response.status_code == 401:
-            return HttpResponseForbidden(status.HTTP_401_UNAUTHORIZED)
+            return HttpResponse(contents["msg"], status=status.HTTP_401_UNAUTHORIZED)
 
         # Decode 진행
         decoded = converter.jwtTokenDecoder(jwtToken)
         if decoded is None:  # 잘못된 JWT 토큰이 들어올시 권한이 없다는 오류코드를 반환합니다.
-            return HttpResponseForbidden(status.HTTP_401_UNAUTHORIZED)
+            return HttpResponse(RP.INVALID_TOKEN, status=status.HTTP_401_UNAUTHORIZED)
 
         if not hasattr(request, 'uid'):
             request.uid = elements.getUid(
