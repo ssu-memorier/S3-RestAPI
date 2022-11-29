@@ -54,8 +54,15 @@ class FileViewSet(viewsets.ModelViewSet):
 
             return Response(MESSAGE.FILE_IS_CREATED, status=status.HTTP_201_CREATED)
         else:
-            print(fileSerializer.errors)
-            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            error = fileSerializer.errors['key'][0].code
+            if error == 'max_length':
+                message = MESSAGE.MAX_LENGTH
+            elif error == 'black':
+                message = MESSAGE.BLANK
+            else:
+                message = MESSAGE.BAD_REQUEST
+
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
