@@ -6,3 +6,5 @@ CONTENT_DISPOISTION_BODY = 'attachment; filename=data.zip'
 
 UID = "uid"
 CONTENTS = "contents"
+
+INVALID_TOKEN = "INVALID_TOKEN"
