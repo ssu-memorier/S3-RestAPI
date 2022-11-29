@@ -15,7 +15,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
 
-        if fileSerializer.is_valid(raise_exception=True):
+        if fileSerializer.is_valid():
             uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
@@ -42,10 +42,9 @@ class FileViewSet(viewsets.ModelViewSet):
     def create(self, request):
         if request.data[RQ.DATA].size > FILEMETA.LIMITED_FILESIZE:
             return Response(MESSAGE.FILE_SIZE_EXCEEDED, status=status.HTTP_400_BAD_REQUEST)
-
         fileSerializer = FileSerializer(data=request.fileMeta)
 
-        if fileSerializer.is_valid(raise_exception=True):
+        if fileSerializer.is_valid():
             uid, dir, key = fileSerializer.elements
 
             isCreated = createObject(uid, dir, key, request.data[RQ.DATA])
@@ -55,11 +54,19 @@ class FileViewSet(viewsets.ModelViewSet):
 
             return Response(MESSAGE.FILE_IS_CREATED, status=status.HTTP_201_CREATED)
         else:
-            return Response(MESSAGE.BAD_REQUEST, status=status.HTTP_400_BAD_REQUEST)
+            error = fileSerializer.errors['key'][0].code
+            if error == 'max_length':
+                message = MESSAGE.MAX_LENGTH
+            elif error == 'black':
+                message = MESSAGE.BLANK
+            else:
+                message = MESSAGE.BAD_REQUEST
+
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
-        if fileSerializer.is_valid(raise_exception=True):
+        if fileSerializer.is_valid():
             uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
@@ -75,7 +82,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def update(self, request):
         fileSerializer = FileSerializer(data=request.fileMeta)
 
-        if fileSerializer.is_valid(raise_exception=True):
+        if fileSerializer.is_valid():
             uid, dir, key = fileSerializer.elements
 
             filePath = converter.dir2path(uid, dir, key)
@@ -93,7 +100,7 @@ class ListViewSet(viewsets.ModelViewSet):
     def list(self, request):
         listSerializer = ListSerializer(data=request.fileMeta)
 
-        if listSerializer.is_valid(raise_exception=True):
+        if listSerializer.is_valid():
             uid = listSerializer.data[RQ.UID]
             contents = getList(uid)
 

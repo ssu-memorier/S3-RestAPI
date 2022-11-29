@@ -1,6 +1,8 @@
 from utils import elements, converter
 from constants import REQUEST as RQ
 from constants import RESPONSE as RP
+from constants import MESSAGE
+
 from rest_framework import status
 from django.http import HttpResponse
 
@@ -27,7 +29,10 @@ class LogInMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
+        try:
+            jwtToken = request.COOKIES[RQ.COOKIES_TOKEN]
+        except KeyError:
+            return HttpResponse(MESSAGE.NO_JWT_TOKEN, status=status.HTTP_400_BAD_REQUEST)
 
         # Request에서 쿠키를 받아 다시 재가공한 뒤 AUTH 서버에 유효성 검사를 진행
         params = {'jwt': jwtToken}
