@@ -9,7 +9,7 @@ def contents2List(contents):
     keys = []
     # contents 파싱진행
     for content in contents:
-        if content['Key'].split('.')[-1] != "pdf":
+        if content['Key'].endswith("pdf"):
             continue
 
         tokens = content['Key'].split('/')
