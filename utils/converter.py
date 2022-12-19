@@ -9,7 +9,10 @@ def contents2List(contents):
     keys = []
     # contents 파싱진행
     for content in contents:
-        if content['Key'].endswith("pdf"):
+        if content['Key'].endswith("pdf"):      # 문서파일은 최근 변경사항에 영향 없음
+            continue
+
+        if content['Key'].split('.')+"pdf" not in contents:     # 문서 파일이 존재하지 않음
             continue
 
         tokens = content['Key'].split('/')
