@@ -12,7 +12,8 @@ def contents2List(contents):
         if content['Key'].endswith("pdf"):      # 문서파일은 최근 변경사항에 영향 없음
             continue
 
-        if content['Key'].split('.')+"pdf" not in contents:     # 문서 파일이 존재하지 않음
+        # 문서 파일이 존재하지 않음
+        if content['Key'][:-4]+"pdf" not in [c['Key'] for c in contents]:
             continue
 
         tokens = content['Key'].split('/')
